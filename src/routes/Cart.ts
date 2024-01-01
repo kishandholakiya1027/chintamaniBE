@@ -1,0 +1,27 @@
+import * as express from 'express';
+import { CartController } from '../Controller/Cart/cart';
+import { Create_Cart_validator, Fetch_Cart_validator } from '../Validator/CartValidator';
+import { AUTH } from '../utils/auth';
+const Routes = express.Router();
+
+const AddToCartController = new CartController();
+
+Routes.post(
+    "/create",
+    Create_Cart_validator,
+    AddToCartController.CreateCart
+);
+
+Routes.get(
+    "/fetch/:userid",
+    Fetch_Cart_validator,
+    AddToCartController.GetCart
+);
+
+Routes.post(
+    "/remove",
+    Create_Cart_validator,
+    AddToCartController.RemoveCart
+);
+
+export default Routes;
