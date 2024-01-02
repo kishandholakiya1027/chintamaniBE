@@ -18,6 +18,11 @@ class AuthController {
         return token;
     }
 
+    generateForgetPasswordToken(userId: any, status: number): string {
+        const token = jwt.sign({ userId, status }, this.secretKey, { expiresIn: '10m' });
+        return token;
+    }
+
     // Function to verify an authentication token
     verifyAuthToken(token: string): string | object {
         try {

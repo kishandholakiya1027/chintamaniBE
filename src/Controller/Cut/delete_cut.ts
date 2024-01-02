@@ -2,33 +2,36 @@ import { RoutesHandler } from "../../utils/ErrorHandler";
 import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "../../entities/ClarityModel";
+import { Cut } from "../../entities/CutModel";
 import { getRepository } from "typeorm";
 
-export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
+export const Remove_Cut = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
+
             const errors = validationResult(req);
 
             if (!errors.isEmpty()) {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid, name } = req.body
+            const { cutid } = req.params;
 
-            const ClarityRepo = getRepository(Clarity);
+            const CutRepo = getRepository(Cut);
 
-            const existingClarity = await ClarityRepo.findOne({ where: { id: clarityid } });
+            const RemoveCut = await CutRepo.findOne({ where: { id: cutid } });
 
-            existingClarity.name = name || existingClarity.name
+            if (!RemoveCut) {
+                return RoutesHandler.sendError(res, req, 'Cut not found', ResponseCodes.inputError);
+            }
 
-            await ClarityRepo.save(existingClarity)
-                .then((data) => {
-                    return RoutesHandler.sendSuccess(res, req, data, 'Clarity updated successfully');
+            await CutRepo.remove(RemoveCut)
+                .then(() => {
+                    return RoutesHandler.sendSuccess(res, req, null, 'Cut Remove successfully');
                 })
                 .catch((err) => {
                     console.log(err);
-                    return RoutesHandler.sendError(res, req, 'Failed to update Clarity', ResponseCodes.saveError);
+                    return RoutesHandler.sendError(res, req, 'Failed to delete Cut', ResponseCodes.serverError);
                 });
 
         } catch (error) {

@@ -8,18 +8,21 @@ const AddToWhishlistController = new WhishlistController();
 
 Routes.post(
     "/create",
+    AUTH,
     Create_Whishlist_validator,
     AddToWhishlistController.CreateWhishlist
 );
 
 Routes.get(
     "/fetch/:userid",
+    AUTH,
     Fetch_Whishlist_validator,
     AddToWhishlistController.GetWhishlist
 );
 
 Routes.post(
     "/remove",
+    AUTH,
     Create_Whishlist_validator,
     AddToWhishlistController.RemoveWhishlist
 );

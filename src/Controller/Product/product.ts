@@ -27,31 +27,32 @@ export class ProductController {
                 let colorimage
                 let clarityimage
                 let cutimage
-                let productimage
+                let productimage = []
 
                 if (req.files.sizeimages) {
                     const sizeimagesPath = req.files.sizeimages.map((item: any) => item.path)
                     sizeimages = await fileService.uploadFileInS3("size", sizeimagesPath)
                 }
 
-                if (req.files.sizeimages) {
-                    const colorimagePath = req.files.sizeimages.map((item: any) => item.path)
+                if (req.files.colorimage) {
+                    const colorimagePath = req.files.colorimage.map((item: any) => item.path)
                     colorimage = await fileService.uploadFileInS3("color", colorimagePath)
                 }
 
-                if (req.files.sizeimages) {
-                    const clarityimagePath = req.files.sizeimages.map((item: any) => item.path)
+                if (req.files.clarityimage) {
+                    const clarityimagePath = req.files.clarityimage.map((item: any) => item.path)
                     clarityimage = await fileService.uploadFileInS3("clarity", clarityimagePath)
                 }
 
-                if (req.files.sizeimages) {
-                    const cutimagePath = req.files.sizeimages.map((item: any) => item.path)
+                if (req.files.cutimage) {
+                    const cutimagePath = req.files.cutimage.map((item: any) => item.path)
                     cutimage = await fileService.uploadFileInS3("cut", cutimagePath)
                 }
 
                 if (req.files.productimage) {
                     const productimagePath = req.files.productimage.map((item: any) => item.path)
-                    productimage = await fileService.uploadFileInS3("product", productimagePath)
+                    let productimageUrl = await fileService.uploadFileInS3("product", productimagePath)
+                    productimage = productimageUrl.map((item: any) => item.fileName)
                 }
 
                 const FindProduct = await ProductRepo.createQueryBuilder('Product')
@@ -82,7 +83,7 @@ export class ProductController {
                         depth: depth,
                         crown_angle: crown_angle,
                         pavilian_angle: pavilian_angle,
-                        productimage: productimage[0].fileName,
+                        productimage: productimage,
                         diamond_size: {
                             size: size,
                             size_desc: size_desc,
@@ -141,7 +142,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { subcategoryid, innnercategoryid, categoryid, minPrice, maxPrice, sort, mincarat, maxcarat, Clarity, Cuts, Color } = req.query
+                const { subcategoryid, innnercategoryid, categoryid, minPrice, maxPrice, sort, mincarat, maxcarat, Clarity, Cuts, Color, shape } = req.query
 
                 const ProductRepo = getRepository(Product);
 
@@ -156,6 +157,10 @@ export class ProductController {
 
                 if (categoryid) {
                     qurey.where('Product.categoryid = :categoryid ', { categoryid: categoryid })
+                }
+
+                if (shape) {
+                    qurey.where('Product.shape = :shape ', { shape: shape })
                 }
 
                 if (subcategoryid) {
@@ -202,7 +207,7 @@ export class ProductController {
 
                 qurey.skip((page - 1) * pageSize)
                 qurey.take(pageSize)
-                
+
                 const [product, total] = await qurey.getManyAndCount()
 
                 if (!product || product.length === 0) {

@@ -1,14 +1,19 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, IsNull } from 'typeorm';
 
 export enum UserRole {
-  Admin = 1,
-  Moderator = 2,
-  User = 3,
+  User = 1,
+  Admin = 2,
+  Moderator = 3,
 }
 
 export enum Status {
+  DEFAULT,
   ACTIVE,
   INACTIVE,
+}
+
+export enum FORGET_PASSWORD {
+  status = 5,
 }
 
 @Entity()

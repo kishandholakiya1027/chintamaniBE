@@ -74,8 +74,8 @@ export class Product {
     @Column({ nullable: true })
     pavilian_angle: string;
 
-    @Column({ nullable: true })
-    productimage: string;
+    @Column("text", { array: true, nullable: true })
+    productimage: string[];
 
     @Column({
         type: 'enum',

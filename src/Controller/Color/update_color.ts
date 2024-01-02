@@ -2,10 +2,10 @@ import { RoutesHandler } from "../../utils/ErrorHandler";
 import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "../../entities/ClarityModel";
+import { Color } from "../../entities/ColorModel";
 import { getRepository } from "typeorm";
 
-export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
+export const Update_Color = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
             const errors = validationResult(req);
@@ -14,21 +14,21 @@ export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid, name } = req.body
+            const { colorid, name } = req.body
 
-            const ClarityRepo = getRepository(Clarity);
+            const ColorRepo = getRepository(Color);
 
-            const existingClarity = await ClarityRepo.findOne({ where: { id: clarityid } });
+            const existingColor = await ColorRepo.findOne({ where: { id: colorid } });
 
-            existingClarity.name = name || existingClarity.name
+            existingColor.name = name || existingColor.name
 
-            await ClarityRepo.save(existingClarity)
+            await ColorRepo.save(existingColor)
                 .then((data) => {
-                    return RoutesHandler.sendSuccess(res, req, data, 'Clarity updated successfully');
+                    return RoutesHandler.sendSuccess(res, req, data, 'Color updated successfully');
                 })
                 .catch((err) => {
                     console.log(err);
-                    return RoutesHandler.sendError(res, req, 'Failed to update Clarity', ResponseCodes.saveError);
+                    return RoutesHandler.sendError(res, req, 'Failed to update Color', ResponseCodes.saveError);
                 });
 
         } catch (error) {

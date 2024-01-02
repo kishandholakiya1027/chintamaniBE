@@ -2,33 +2,36 @@ import { RoutesHandler } from "../../utils/ErrorHandler";
 import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "../../entities/ClarityModel";
+import { Color } from "../../entities/ColorModel";
 import { getRepository } from "typeorm";
 
-export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
+export const Remove_Color = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
+
             const errors = validationResult(req);
 
             if (!errors.isEmpty()) {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid, name } = req.body
+            const { colorid } = req.params;
 
-            const ClarityRepo = getRepository(Clarity);
+            const ColorRepo = getRepository(Color);
 
-            const existingClarity = await ClarityRepo.findOne({ where: { id: clarityid } });
+            const RemoveColor = await ColorRepo.findOne({ where: { id: colorid } });
 
-            existingClarity.name = name || existingClarity.name
+            if (!RemoveColor) {
+                return RoutesHandler.sendError(res, req, 'Color not found', ResponseCodes.inputError);
+            }
 
-            await ClarityRepo.save(existingClarity)
-                .then((data) => {
-                    return RoutesHandler.sendSuccess(res, req, data, 'Clarity updated successfully');
+            await ColorRepo.remove(RemoveColor)
+                .then(() => {
+                    return RoutesHandler.sendSuccess(res, req, null, 'Color Remove successfully');
                 })
                 .catch((err) => {
                     console.log(err);
-                    return RoutesHandler.sendError(res, req, 'Failed to update Clarity', ResponseCodes.saveError);
+                    return RoutesHandler.sendError(res, req, 'Failed to delete Color', ResponseCodes.serverError);
                 });
 
         } catch (error) {

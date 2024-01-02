@@ -2,10 +2,10 @@ import { RoutesHandler } from "../../utils/ErrorHandler";
 import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "../../entities/ClarityModel";
+import { Shape } from "../../entities/ShapeModel";
 import { getRepository } from "typeorm";
 
-export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
+export const Update_Shape = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
             const errors = validationResult(req);
@@ -14,21 +14,23 @@ export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid, name } = req.body
+            const { shapeid, name, description, image } = req.body
 
-            const ClarityRepo = getRepository(Clarity);
+            const ShapeRepo = getRepository(Shape);
 
-            const existingClarity = await ClarityRepo.findOne({ where: { id: clarityid } });
+            const existingShape = await ShapeRepo.findOne({ where: { id: shapeid } });
 
-            existingClarity.name = name || existingClarity.name
+            existingShape.name = name || existingShape.name
+            existingShape.description = description || existingShape.description
+            existingShape.image = image || existingShape.image
 
-            await ClarityRepo.save(existingClarity)
+            await ShapeRepo.save(existingShape)
                 .then((data) => {
-                    return RoutesHandler.sendSuccess(res, req, data, 'Clarity updated successfully');
+                    return RoutesHandler.sendSuccess(res, req, data, 'Shape updated successfully');
                 })
                 .catch((err) => {
                     console.log(err);
-                    return RoutesHandler.sendError(res, req, 'Failed to update Clarity', ResponseCodes.saveError);
+                    return RoutesHandler.sendError(res, req, 'Failed to update Shape', ResponseCodes.saveError);
                 });
 
         } catch (error) {

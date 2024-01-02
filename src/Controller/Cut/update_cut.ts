@@ -2,10 +2,10 @@ import { RoutesHandler } from "../../utils/ErrorHandler";
 import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "../../entities/ClarityModel";
+import { Cut } from "../../entities/CutModel";
 import { getRepository } from "typeorm";
 
-export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
+export const Update_Cut = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
             const errors = validationResult(req);
@@ -14,21 +14,21 @@ export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid, name } = req.body
+            const { cutid, name } = req.body
 
-            const ClarityRepo = getRepository(Clarity);
+            const CutRepo = getRepository(Cut);
 
-            const existingClarity = await ClarityRepo.findOne({ where: { id: clarityid } });
+            const existingCut = await CutRepo.findOne({ where: { id: cutid } });
 
-            existingClarity.name = name || existingClarity.name
+            existingCut.name = name || existingCut.name
 
-            await ClarityRepo.save(existingClarity)
+            await CutRepo.save(existingCut)
                 .then((data) => {
-                    return RoutesHandler.sendSuccess(res, req, data, 'Clarity updated successfully');
+                    return RoutesHandler.sendSuccess(res, req, data, 'Cut updated successfully');
                 })
                 .catch((err) => {
                     console.log(err);
-                    return RoutesHandler.sendError(res, req, 'Failed to update Clarity', ResponseCodes.saveError);
+                    return RoutesHandler.sendError(res, req, 'Failed to update Cut', ResponseCodes.saveError);
                 });
 
         } catch (error) {

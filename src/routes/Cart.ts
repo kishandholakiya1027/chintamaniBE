@@ -8,18 +8,21 @@ const AddToCartController = new CartController();
 
 Routes.post(
     "/create",
+    AUTH,
     Create_Cart_validator,
     AddToCartController.CreateCart
 );
 
 Routes.get(
     "/fetch/:userid",
+    AUTH,
     Fetch_Cart_validator,
     AddToCartController.GetCart
 );
 
 Routes.post(
     "/remove",
+    AUTH,
     Create_Cart_validator,
     AddToCartController.RemoveCart
 );

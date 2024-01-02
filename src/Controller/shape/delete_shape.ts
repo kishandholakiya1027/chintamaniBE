@@ -2,33 +2,36 @@ import { RoutesHandler } from "../../utils/ErrorHandler";
 import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "../../entities/ClarityModel";
+import { Shape } from "../../entities/ShapeModel";
 import { getRepository } from "typeorm";
 
-export const Update_Clarity = (req: any, res: Response, next): Promise<any> => {
+export const Remove_Shape = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
         try {
+
             const errors = validationResult(req);
 
             if (!errors.isEmpty()) {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid, name } = req.body
+            const { shapeid } = req.params;
 
-            const ClarityRepo = getRepository(Clarity);
+            const ShapeRepo = getRepository(Shape);
 
-            const existingClarity = await ClarityRepo.findOne({ where: { id: clarityid } });
+            const RemoveShape = await ShapeRepo.findOne({ where: { id: shapeid } });
 
-            existingClarity.name = name || existingClarity.name
+            if (!RemoveShape) {
+                return RoutesHandler.sendError(res, req, 'Shape not found', ResponseCodes.inputError);
+            }
 
-            await ClarityRepo.save(existingClarity)
-                .then((data) => {
-                    return RoutesHandler.sendSuccess(res, req, data, 'Clarity updated successfully');
+            await ShapeRepo.remove(RemoveShape)
+                .then(() => {
+                    return RoutesHandler.sendSuccess(res, req, null, 'Shape Remove successfully');
                 })
                 .catch((err) => {
                     console.log(err);
-                    return RoutesHandler.sendError(res, req, 'Failed to update Clarity', ResponseCodes.saveError);
+                    return RoutesHandler.sendError(res, req, 'Failed to delete Shape', ResponseCodes.serverError);
                 });
 
         } catch (error) {

@@ -1,8 +1,8 @@
-import { RoutesHandler } from "src/utils/ErrorHandler";
-import { ResponseCodes } from "src/utils/response-codes";
+import { RoutesHandler } from "../../utils/ErrorHandler";
+import { ResponseCodes } from "../../utils/response-codes";
 import { Request, Response } from 'express';
 import { validationResult } from "express-validator";
-import { Clarity } from "src/entities/ClarityModel";
+import { Clarity } from "../../entities/ClarityModel";
 import { getRepository } from "typeorm";
 
 export const Remove_Clarity = (req: any, res: Response, next): Promise<any> => {
@@ -15,7 +15,7 @@ export const Remove_Clarity = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { clarityid } = req.param;
+            const { clarityid } = req.params;
 
             const ClarityRepo = getRepository(Clarity);
 
