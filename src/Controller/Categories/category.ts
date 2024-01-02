@@ -7,7 +7,7 @@ import { ResponseCodes } from '../../utils/response-codes';
 import { RoutesHandler } from '../../utils/ErrorHandler';
 import { SubCategory } from '../../entities/SubCategoryModel';
 import { InnerCategory } from '../../entities/InnerCategoryModel';
-
+const fileService = new FileService();
 export class CategoryController {
   constructor() { }
 
@@ -34,9 +34,17 @@ export class CategoryController {
 
         if (!category) {
 
+          let categoryimage
+
+          if (req.file) {
+            const categoryimagesPath = [req.file].map((item: any) => item.path)
+            categoryimage = await fileService.uploadFileInS3("categoryimage", categoryimagesPath)
+          }
+
           const CategoryData = await CategoryRepo.create({
             name: name,
-            description: description
+            description: description,
+            image: categoryimage[0].fileName
           });
 
           CategoryRepo.save(CategoryData)
@@ -178,12 +186,13 @@ export class CategoryController {
     return new Promise(async (resolve, reject) => {
       try {
         const id = req.params.id;
-        const { name, description, status } = req.body;
+
+        const { name, description, image } = req.body;
+
         const categoryRepo = getRepository(Category);
 
         const categoryToUpdate = await categoryRepo.findOne({
           where: { id: id },
-          select: ['id', 'name', 'description', 'createdAt', 'updatedAt', 'status'],
         });
 
         if (!categoryToUpdate) {
@@ -193,10 +202,9 @@ export class CategoryController {
           });
         }
 
-        categoryToUpdate.name = name !== undefined && name !== null ? name : categoryToUpdate.name;
-        categoryToUpdate.description = description !== undefined && description !== null ? description : categoryToUpdate.description;
-        categoryToUpdate.status = status !== undefined && status !== null ? parseInt(status) : categoryToUpdate.status;
-
+        categoryToUpdate.name = name || categoryToUpdate.name;
+        categoryToUpdate.description = description || categoryToUpdate.description;
+        categoryToUpdate.image = image || categoryToUpdate.image;
 
         await categoryRepo.save(categoryToUpdate);
 

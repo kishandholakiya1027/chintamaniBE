@@ -16,6 +16,9 @@ export class Category {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ nullable: true })
+  image: string;
+
   @Column({
     type: 'enum',
     enum: CategoryStatus,

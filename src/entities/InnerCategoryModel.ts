@@ -29,8 +29,8 @@ export class InnerCategory {
   @Column({ nullable: true })
   description: string;
 
-  @Column('text', { array: true, nullable: true })
-  image: string[];
+  @Column({ nullable: true })
+  image: string;
 
   @Column({
     type: 'enum',

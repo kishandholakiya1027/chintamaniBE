@@ -1,6 +1,6 @@
 import { getRepository } from 'typeorm';
 import { Request, Response } from 'express';
-import { FORGET_PASSWORD, User } from '../../entities/UserModel';
+import { FORGET_PASSWORD, Status, User } from '../../entities/UserModel';
 import { validationResult } from 'express-validator';
 import { authController } from '../../utils/auth';
 import { bcryptpassword, comparepassword } from '../../utils/bcrypt';
@@ -31,7 +31,7 @@ export class UserController {
         const UserRepo = getRepository(User)
         const OtpsRepo = getRepository(Otps)
 
-        const qurey = await UserRepo.findOne({ where: { email: email } })
+        const qurey = await UserRepo.findOne({ where: { email: email, status: Status.INACTIVE } })
 
         if (qurey) {
           return RoutesHandler.sendError(res, req, 'User already in Exist Try to login', ResponseCodes.general);

@@ -60,13 +60,22 @@ export class ProductController {
                     .where('Product.title = :title ', { title })
                     .getOne();
 
+                let disccount_percentage = null
+
                 if (!FindProduct) {
+
+                    if (price && disccount_price) {
+                        const difference = price - disccount_price;
+                        const percentage = (difference / price) * 100;
+                        disccount_percentage = percentage
+                    }
 
                     const newProduct: IProduct = ProductRepo.create({
                         maintitle: maintitle,
                         title: title,
                         price: price,
                         disccount_price: disccount_price,
+                        disccount_percentage: disccount_percentage ? disccount_percentage : null,
                         shape: shape,
                         carat: carat,
                         colour: colour,
@@ -108,7 +117,7 @@ export class ProductController {
                         newProduct.innercategoryid = innercategoryid
                     }
 
-                    if (innercategoryid) {
+                    if (subcategoryid) {
                         newProduct.subcategoryid = subcategoryid
                     }
 
@@ -194,15 +203,15 @@ export class ProductController {
                 }
 
                 if (Clarity && Clarity.length) {
-                    qurey.andWhere('Product.clarity IN (:...clarity)', { clarity: Clarity })
+                    qurey.andWhere('Product.clarity IN (:...clarity)', { clarity: JSON.parse(Clarity) })
                 }
 
                 if (Cuts && Cuts.length) {
-                    qurey.andWhere('Product.cut IN (:...cut)', { cut: Cuts })
+                    qurey.andWhere('Product.cut IN (:...cut)', { cut: JSON.parse(Cuts) })
                 }
 
                 if (Color && Color.length) {
-                    qurey.andWhere('Product.colour IN (:...colour)', { colour: Color })
+                    qurey.andWhere('Product.colour IN (:...colour)', { colour: JSON.parse(Color) })
                 }
 
                 qurey.skip((page - 1) * pageSize)
@@ -268,11 +277,19 @@ export class ProductController {
                 if (!existingProduct) {
                     return RoutesHandler.sendError(res, req, 'Product does not exist', ResponseCodes.inputError);
                 }
+                let disccount_percentage = null
+
+                if (price && disccount_price) {
+                    const difference = price - disccount_price;
+                    const percentage = (difference / price) * 100;
+                    disccount_percentage = percentage
+                }
 
                 existingProduct.title = title || existingProduct.title;
                 existingProduct.maintitle = maintitle || existingProduct.maintitle;
                 existingProduct.price = price || existingProduct.price;
                 existingProduct.disccount_price = disccount_price || existingProduct.disccount_price;
+                existingProduct.disccount_percentage = disccount_percentage || existingProduct.disccount_percentage;
                 existingProduct.shape = shape || existingProduct.shape;
                 existingProduct.carat = carat || existingProduct.carat;
                 existingProduct.colour = colour || existingProduct.colour;

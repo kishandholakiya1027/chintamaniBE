@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import { User } from '../../entities/UserModel';
+import { Status, User } from '../../entities/UserModel';
 import { RoutesHandler } from '../../utils/ErrorHandler';
 import { ResponseCodes } from '../../utils/response-codes';
 import { getRepository } from 'typeorm';
@@ -22,7 +22,7 @@ export const Login = (req: any, res: Response, next): Promise<any> => {
             const UserRepo = getRepository(User)
 
 
-            const qurey = await UserRepo.findOne({ where: { email: email } })
+            const qurey = await UserRepo.findOne({ where: { email: email, status: Status.ACTIVE } })
 
             if (qurey) {
 

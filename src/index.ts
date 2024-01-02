@@ -7,6 +7,7 @@ import bodyparser from 'body-parser'
 import cors from "cors";
 import path from "path";
 import { databaseConfig } from './config/database.config';
+import { CreateAdmin } from './utils/Admin';
 dotenv.config();
 
 const app = express();
@@ -39,8 +40,10 @@ app.use(errorHandler);
 
 createConnection(databaseConfig)
   .then(async () => {
+    CreateAdmin({})
     app.listen(port, () => {
       console.log(`Server Start on http://localhost:${port},
 Database Connected successfully`);
     });
-});
+  });
+

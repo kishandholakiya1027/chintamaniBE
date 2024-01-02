@@ -10,6 +10,7 @@ import ClarityRoute from './Clarity';
 import CutRoute from './Cut';
 import ColorRoute from './Color';
 import ShapeRoute from './Shape';
+import ContactRoute from './Contact';
 
 const Routes = express.Router();
 
@@ -24,5 +25,6 @@ Routes.use('/clarity', ClarityRoute);
 Routes.use('/cut', CutRoute);
 Routes.use('/color', ColorRoute);
 Routes.use('/shape', ShapeRoute);
+Routes.use('/contact', ContactRoute);
 
 export default Routes;

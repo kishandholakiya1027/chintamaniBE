@@ -24,20 +24,19 @@ export class SubCategoryController {
           );
         }
         const subCategoryRepo = getRepository(SubCategory);
-        let image: any = [];
+
+        let subcategoryimage
+
         if (req.file) {
-          image = await fileService.uploadFile(
-            'subcategory',
-            req.file.path.replace(/\\/g, '/'),
-            req.file.filename
-          );
+          const subcategoryimagesPath = [req.file].map((item: any) => item.path)
+          subcategoryimage = await fileService.uploadFileInS3("subcategory", subcategoryimagesPath)
         }
 
         let subcategory = {
           name,
           categoryid: categoryid,
           description,
-          image: [image.fileName],
+          image: subcategoryimage[0].fileName,
         };
 
         const newSubCategory = subCategoryRepo.create(subcategory);
@@ -176,32 +175,13 @@ export class SubCategoryController {
     return new Promise(async (resolve, reject) => {
       try {
         const id = req.params.id;
-        const { name, categoryid, description, status } = req.body;
-
-        if (!name || !description || !categoryid) {
-          return RoutesHandler.sendError(
-            res,
-            req,
-            'All Field Required',
-            ResponseCodes.inputError
-          );
-        }
+        const { name, categoryid, description, image } = req.body;
 
         const subCategoryRepo = getRepository(SubCategory);
 
         // Check if the subcategory with the given ID exists
         const existingSubCategory = await subCategoryRepo.findOne({
           where: { id: id },
-          select: [
-            'id',
-            'name',
-            'image',
-            'description',
-            'status',
-            'createdAt',
-            'updatedAt',
-          ],
-          relations: ['categoryid'],
         });
 
         if (!existingSubCategory) {
@@ -213,23 +193,13 @@ export class SubCategoryController {
           );
         }
 
-        let image: any = [];
-        if (req.file) {
-          image = await fileService.uploadFile(
-            'subcategory',
-            req.file.path.replace(/\\/g, '/'),
-            req.file.filename
-          );
-        }
-
         await subCategoryRepo.update(
           { id: existingSubCategory.id },
           {
             name,
             categoryid,
             description,
-            status: status !== undefined && status !== null ? parseInt(status) : existingSubCategory.status,
-            image: [image.fileName],
+            image: image,
           }
         );
         return res.status(ResponseCodes.success).json({

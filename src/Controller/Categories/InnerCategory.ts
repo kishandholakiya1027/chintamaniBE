@@ -25,21 +25,19 @@ export class InnerCategoryController {
           );
         }
         const InnerCategoryRepo = getRepository(InnerCategory);
-        let image: any = [];
+
+        let InnerCategporyimage
 
         if (req.file) {
-          image = await fileService.uploadFile(
-            'subcategory',
-            req.file.path.replace(/\\/g, '/'),
-            req.file.filename
-          );
+          const innercategoryimagesPath = [req.file].map((item: any) => item.path)
+          InnerCategporyimage = await fileService.uploadFileInS3("InnerCategporyimage", innercategoryimagesPath)
         }
 
         let subcategory = {
           name,
           subcategoryid: subcategoryid,
           description,
-          image: [image.fileName],
+          image: InnerCategporyimage[0].fileName,
         };
 
         const newSubCategory = InnerCategoryRepo.create(subcategory);
@@ -139,16 +137,8 @@ export class InnerCategoryController {
     return new Promise(async (resolve, reject) => {
       try {
         const id = req.params.id;
-        const { name, subcategoryid, description, status } = req.body;
-
-        if (!name || !description || !subcategoryid) {
-          return RoutesHandler.sendError(
-            res,
-            req,
-            'All Field Required',
-            ResponseCodes.inputError
-          );
-        }
+        
+        const { name, subcategoryid, description, image } = req.body;
 
         const InnerCategoryRepo = getRepository(InnerCategory);
 
@@ -176,23 +166,13 @@ export class InnerCategoryController {
           );
         }
 
-        let image: any = [];
-        if (req.file) {
-          image = await fileService.uploadFile(
-            'subcategory',
-            req.file.path.replace(/\\/g, '/'),
-            req.file.filename
-          );
-        }
-
         await InnerCategoryRepo.update(
           { id: existingInnerCategory.id },
           {
             name,
             subcategoryid,
             description,
-            status: status !== undefined && status !== null ? parseInt(status) : existingInnerCategory.status,
-            image: [image.fileName],
+            image: image,
           }
         );
         return res.status(ResponseCodes.success).json({
