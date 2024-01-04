@@ -11,6 +11,7 @@ import CutRoute from './Cut';
 import ColorRoute from './Color';
 import ShapeRoute from './Shape';
 import ContactRoute from './Contact';
+import OrderRoute from './Order';
 
 const Routes = express.Router();
 
@@ -26,5 +27,6 @@ Routes.use('/cut', CutRoute);
 Routes.use('/color', ColorRoute);
 Routes.use('/shape', ShapeRoute);
 Routes.use('/contact', ContactRoute);
+Routes.use('/order', OrderRoute);
 
 export default Routes;
