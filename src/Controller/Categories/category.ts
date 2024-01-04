@@ -110,6 +110,67 @@ export class CategoryController {
     });
   }
 
+  
+  public async getCategory(req: any, res: Response, next): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+   try {
+     const CategoryRepo = getRepository(Category);
+     const SubCategoryRepo = getRepository(SubCategory);
+
+     const categories =
+       await CategoryRepo.createQueryBuilder("category").getMany();
+
+     const modifiedCategories = [];
+
+     for (let i = 0; i < categories.length; i++) {
+       const category = categories[i];
+
+       const subCategories = await SubCategoryRepo.createQueryBuilder(
+         "subcategory"
+       )
+         .select(["subcategory.id"])
+         .where("subcategory.categoryid = :categoryid", {
+           categoryid: category.id,
+         })
+         .getMany();
+
+       modifiedCategories.push({
+         id: category.id,
+         name: category.name,
+         description: category.description,
+         image: category.image,
+         createdAt: category.createdAt,
+         updatedAt: category.updatedAt,
+         subcategory: subCategories.length > 0 ? subCategories[0].id : null,
+       });
+     }
+
+     if (!modifiedCategories || modifiedCategories.length === 0) {
+       return RoutesHandler.sendError(
+         res,
+         req,
+         "Category Not Found",
+         ResponseCodes.success
+       );
+     }
+
+     return RoutesHandler.sendSuccess(
+       res,
+       req,
+       modifiedCategories,
+       "Categories fetched Successfully"
+     );
+   } catch (error) {
+     return RoutesHandler.sendError(
+       res,
+       req,
+       "Internal Server Error",
+       ResponseCodes.serverError
+     );
+   }
+    });
+  }
+
 
   public async getCategory_To_Subcategory(req: any, res: Response, next): Promise<any> {
     return new Promise(async (resolve, reject) => {

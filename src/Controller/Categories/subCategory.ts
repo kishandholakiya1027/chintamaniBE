@@ -131,6 +131,44 @@ export class SubCategoryController {
     });
   }
 
+
+  public async getAllSubCategories(req: any, res: Response, next): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+     try {
+       const subCategoryRepo = getRepository(SubCategory);
+
+       const subCategories = await subCategoryRepo
+         .createQueryBuilder("subCategory")
+         .leftJoinAndSelect("subCategory.categoryid", "category")
+         .getMany();
+
+       const responseData = subCategories.map((subCategory) => ({
+         id: subCategory.id,
+         name: subCategory.name,
+         description: subCategory.description,
+         image: subCategory.image,
+         createdAt: subCategory.createdAt,
+         updatedAt: subCategory.updatedAt,
+         category: subCategory.categoryid.id, 
+       }));
+
+       return res.status(ResponseCodes.success).json({
+         message: "SubCategory Fetched Successfully",
+         status: true,
+         data: responseData,
+       });
+     } catch (error) {
+       console.error(error);
+
+       return next({
+         statusCode: ResponseCodes.saveError,
+         message: "SubCategory cannot be fetched",
+       });
+     }
+    });
+  }
+
+
   public async getOneSubCategory(req: any, res: Response, next): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {

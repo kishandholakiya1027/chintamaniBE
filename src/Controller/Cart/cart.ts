@@ -1,148 +1,253 @@
-import { getRepository } from 'typeorm';
-import { Request, Response } from 'express';
-import { RoutesHandler } from '../../utils/ErrorHandler';
-import { ResponseCodes } from '../../utils/response-codes';
-import { Cart } from '../../entities/CartModel';
-import { validationResult } from 'express-validator';
-import { Product } from '../../entities/ProductModel';
+import { getRepository } from "typeorm";
+import { Request, Response } from "express";
+import { RoutesHandler } from "../../utils/ErrorHandler";
+import { ResponseCodes } from "../../utils/response-codes";
+import { Cart } from "../../entities/CartModel";
+import { validationResult } from "express-validator";
+import { Product } from "../../entities/ProductModel";
 
 export class CartController {
-    constructor() { }
+  constructor() {}
 
-    public async CreateCart(req: any, res: Response, next): Promise<any> {
-        return new Promise(async (resolve, reject) => {
-            try {
+  public async CreateCart(req: any, res: Response, next): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const errors = validationResult(req);
 
-                const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return RoutesHandler.sendError(
+            res,
+            req,
+            errors.array(),
+            ResponseCodes.inputError
+          );
+        }
 
-                if (!errors.isEmpty()) {
-                    return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
-                }
+        const { userid, productid, quantity } = req.body; // Add quantity to the request body
 
-                const { userid, productid } = req.body;
-                const CartRepo = getRepository(Cart);
-                const ProductRepo = getRepository(Product);
+        const CartRepo = getRepository(Cart);
+        const ProductRepo = getRepository(Product);
 
-                let existingCart = await CartRepo.findOne({ where: { userid: { id: userid } }, relations: ['products_id'] });
-
-                if (existingCart) {
-
-                    if (existingCart.products_id.some(item => item.id === productid)) {
-                        return RoutesHandler.sendError(res, req, 'Product already in Cart', ResponseCodes.general);
-                    } else {
-
-                        const Productdata = await ProductRepo.findOne({
-                            where: { id: productid }
-                        });
-
-                        existingCart.products_id.push(Productdata);
-
-                        const Cart = await CartRepo.save(existingCart);
-
-                        return RoutesHandler.sendSuccess(res, req, Cart, "Product Added Successfully")
-                    }
-
-                } else {
-
-                    const CartProduct = await CartRepo.create({
-                        userid: userid
-                    })
-
-                    const NewSaveCart = await CartRepo.save(CartProduct);
-
-                    const data = await ProductRepo.findOne({
-                        where: { id: productid }
-                    });
-
-                    if (!NewSaveCart.products_id) {
-                        NewSaveCart.products_id = [data];
-                    } else {
-                        NewSaveCart.products_id.push(data);
-                    }
-                    console.log(NewSaveCart, "NewSaveCart")
-                    const NewSaveCartData = await CartRepo.save(NewSaveCart);
-
-                    const populatedCart = await CartRepo.findOne({
-                        where: { id: NewSaveCartData.id },
-                        relations: ['products_id']
-                    });
-
-                    console.log(populatedCart, "populatedCart")
-
-                    return RoutesHandler.sendSuccess(res, req, populatedCart, "Cart Created Successfully")
-                }
-
-            } catch (error) {
-                console.log(error, "Error")
-                return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
-            }
+        let existingCart = await CartRepo.findOne({
+          where: { userid: { id: userid } },
+          relations: ["products_id"],
         });
-    }
 
-    public async GetCart(req: any, res: Response, next): Promise<any> {
-        return new Promise(async (resolve, reject) => {
-            try {
+        if (existingCart) {
+          if (existingCart.products_id.some((item) => item.id === productid)) {
+            return RoutesHandler.sendError(
+              res,
+              req,
+              "Product already in Cart",
+              ResponseCodes.general
+            );
+          } else {
+            const productData = await ProductRepo.findOne({
+              where: { id: productid },
+            });
 
-                const errors = validationResult(req);
+            const updatedCart = await CartRepo.save({
+              ...existingCart,
+              products_id: [...existingCart.products_id, productData],
+              quantity: [...existingCart.quantity, quantity],
+            });
 
-                if (!errors.isEmpty()) {
-                    return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
-                }
+            const productResponse = updatedCart.products_id.map(
+              (product, index) => ({
+                product: product,
+                quantity: updatedCart.quantity[index],
+              })
+            );
 
-                const { userid } = req.params;
+            let responceData = {
+              id: existingCart.id,
+              userid: existingCart.userid,
+              products: productResponse,
+              createdAt: existingCart.createdAt,
+              updatedAt: existingCart.updatedAt,
+            };
 
-                const CartRepo = getRepository(Cart);
+            return RoutesHandler.sendSuccess(
+              res,
+              req,
+              responceData,
+              "Product Added Successfully"
+            );
+          }
+        } else {
+          const cartProduct = await CartRepo.create({
+            userid: userid,
+            quantity: [quantity],
+          });
 
-                let existingCart = await CartRepo.findOne({ where: { userid: { id: userid } }, relations: ['userid', 'products_id'] });
+          const newSaveCart = await CartRepo.save(cartProduct);
 
-                if (!existingCart) {
-                    return RoutesHandler.sendSuccess(res, req, [], 'Item Not Found');
-                }
+          const data = await ProductRepo.findOne({
+            where: { id: productid },
+          });
 
-                return RoutesHandler.sendSuccess(res, req, existingCart, "Item Found Successfully")
+          // Modify the structure of products_id and quantity in newSaveCart
+          newSaveCart.products_id = [data];
+          newSaveCart.quantity = [quantity];
 
-            } catch (error) {
-                console.log(error, "Error")
-                return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
-            }
+          const newSaveCartData = await CartRepo.save(newSaveCart);
 
+          const populatedCart = await CartRepo.findOne({
+            where: { id: newSaveCartData.id },
+            relations: ["products_id"],
+          });
+
+          const productResponse = populatedCart.products_id.map(
+            (product, index) => ({
+              product: product,
+              quantity: populatedCart.quantity[index],
+            })
+          );
+
+          let responceData = {
+            id: newSaveCartData.id,
+            userid: newSaveCartData.userid,
+            products: productResponse,
+            createdAt: newSaveCartData.createdAt,
+            updatedAt: newSaveCartData.updatedAt,
+          };
+
+          return RoutesHandler.sendSuccess(
+            res,
+            req,
+            responceData,
+            "Cart Created Successfully"
+          );
+        }
+      } catch (error) {
+        console.log(error, "Error");
+        return RoutesHandler.sendError(
+          res,
+          req,
+          "Internal Server Error",
+          ResponseCodes.serverError
+        );
+      }
+    });
+  }
+
+  public async GetCart(req: any, res: Response, next): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+          return RoutesHandler.sendError(
+            res,
+            req,
+            errors.array(),
+            ResponseCodes.inputError
+          );
+        }
+
+        const { userid } = req.params;
+
+        const CartRepo = getRepository(Cart);
+
+        let existingCart = await CartRepo.findOne({
+          where: { userid: { id: userid } },
+          relations: ["userid", "products_id"],
         });
-    }
 
-    public async RemoveCart(req: any, res: Response, next): Promise<any> {
-        return new Promise(async (resolve, reject) => {
-            try {
+        if (!existingCart) {
+          return RoutesHandler.sendSuccess(res, req, [], "Item Not Found");
+        }
 
-                const errors = validationResult(req);
+        return RoutesHandler.sendSuccess(
+          res,
+          req,
+          existingCart,
+          "Item Found Successfully"
+        );
+      } catch (error) {
+        console.log(error, "Error");
+        return RoutesHandler.sendError(
+          res,
+          req,
+          "Internal Server Error",
+          ResponseCodes.serverError
+        );
+      }
+    });
+  }
 
-                if (!errors.isEmpty()) {
-                    return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
-                }
+  public async RemoveCart(req: any, res: Response, next): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const errors = validationResult(req);
 
-                const { userid, productid } = req.body;
+        if (!errors.isEmpty()) {
+          return RoutesHandler.sendError(
+            res,
+            req,
+            errors.array(),
+            ResponseCodes.inputError
+          );
+        }
 
-                const CartRepo = getRepository(Cart);
+        const { userid, productid } = req.body;
 
-                let existingCart = await CartRepo.findOne({ where: { userid: { id: userid } }, relations: ['userid', 'products_id'] });
+        const CartRepo = getRepository(Cart);
 
-                if (existingCart.products_id.some(item => item.id === productid)) {
-
-                    existingCart.products_id = existingCart.products_id.filter(product => product.id !== productid);
-
-                    const Cart = await CartRepo.save(existingCart);
-
-                    return RoutesHandler.sendSuccess(res, req, Cart, "Product Added Successfully")
-
-                } else {
-                    return RoutesHandler.sendError(res, req, 'Product already in Cart', ResponseCodes.general);
-                }
-
-            } catch (error) {
-                console.log(error, "Error")
-                return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
-            }
-
+        let existingCart = await CartRepo.findOne({
+          where: { userid: { id: userid } },
+          relations: ["userid", "products_id"],
         });
-    }
+
+        const productIndex = existingCart.products_id.findIndex(
+          (item) => item.id === productid
+        );
+
+        if (productIndex !== -1) {
+          // Remove the product and quantity at the found index
+          existingCart.products_id.splice(productIndex, 1);
+          existingCart.quantity.splice(productIndex, 1);
+
+          const updatedCart = await CartRepo.save(existingCart);
+
+          const productResponse = updatedCart.products_id.map(
+            (product, index) => ({
+              product: product,
+              quantity: updatedCart.quantity[index],
+            })
+          );
+
+          let responceData = {
+            id: existingCart.id,
+            userid: existingCart.userid,
+            products: productResponse,
+            createdAt: existingCart.createdAt,
+            updatedAt: existingCart.updatedAt,
+          };
+
+          return RoutesHandler.sendSuccess(
+            res,
+            req,
+            responceData,
+            "Product Removed Successfully"
+          );
+        } else {
+          return RoutesHandler.sendError(
+            res,
+            req,
+            "Product not found in Cart",
+            ResponseCodes.general
+          );
+        }
+      } catch (error) {
+        console.log(error, "Error");
+        return RoutesHandler.sendError(
+          res,
+          req,
+          "Internal Server Error",
+          ResponseCodes.serverError
+        );
+      }
+    });
+  }
 }
-

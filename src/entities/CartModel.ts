@@ -19,6 +19,9 @@ export class Cart {
     @JoinColumn({ name: 'userid', referencedColumnName: 'id' })
     userid: User;
 
+    @Column({ type: 'simple-array', default: [] }) 
+    quantity: number[];
+
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 

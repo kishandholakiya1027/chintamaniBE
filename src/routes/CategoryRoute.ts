@@ -9,6 +9,8 @@ const categoryController = new CategoryController();
 
 Routes.post('/create', upload, Category_create_validator, categoryController.CreateCategory);
 
+Routes.get('/getallcategory', categoryController.getCategory);
+
 Routes.get('/getall', categoryController.getAllCategory);
 
 Routes.get('/subcategory', Fetch_Category_To_subcategory_validator, categoryController.getCategory_To_Subcategory);

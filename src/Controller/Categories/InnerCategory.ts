@@ -91,6 +91,52 @@ export class InnerCategoryController {
     });
   }
 
+  public async getAllInnerCategory(
+    req: any,
+    res: Response,
+    next
+  ): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const InnerCategoryRepo = getRepository(InnerCategory);
+
+         await InnerCategoryRepo
+          .createQueryBuilder("innerCategory")
+          .leftJoinAndSelect("innerCategory.subcategoryid", "subcategory")
+          .getMany()
+          .then((data) => {
+            const responseData = data.map((innerCategory) => ({
+              id: innerCategory.id,
+              name: innerCategory.name,
+              description: innerCategory.description,
+              image: innerCategory.image,
+              createdAt: innerCategory.createdAt,
+              updatedAt: innerCategory.updatedAt,
+              subCategory: innerCategory.subcategoryid.id,
+            }));
+            return res.status(ResponseCodes.success).json({
+              message: "SubCategory Fatched Successfully",
+              status: true,
+              data: responseData,
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+
+            return next({
+              statusCode: ResponseCodes.saveError,
+              message: "SubCategory can not be fatched",
+            });
+          });
+      } catch (error) {
+        return next({
+          statusCode: ResponseCodes.serverError,
+          message: "Internal Server Error",
+        });
+      }
+    });
+  }
+
   public async getOneSubCategory(req: any, res: Response, next): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -137,7 +183,7 @@ export class InnerCategoryController {
     return new Promise(async (resolve, reject) => {
       try {
         const id = req.params.id;
-        
+
         const { name, subcategoryid, description, image } = req.body;
 
         const InnerCategoryRepo = getRepository(InnerCategory);

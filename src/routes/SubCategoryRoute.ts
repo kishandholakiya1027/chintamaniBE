@@ -10,6 +10,8 @@ Routes.post('/create', upload, subCategoryController.CreateSubCategory);
 
 Routes.get('/getall', subCategoryController.getAllSubCategory);
 
+Routes.get("/getallSubCategories", subCategoryController.getAllSubCategories);
+
 Routes.get('/innercategory', Fetch_SubCategory_To_Innercategory_validator, subCategoryController.GetSubcategory_To_InnerCategory);
 
 Routes.get('/get/:id', subCategoryController.getOneSubCategory);
