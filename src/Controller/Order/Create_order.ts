@@ -9,70 +9,63 @@ import Razorpay from 'razorpay';
 
 export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
     return new Promise(async (resolve, reject) => {
-        // try {
-        //     const errors = validationResult(req);
+        try {
+            const errors = validationResult(req);
 
-        //     if (!errors.isEmpty()) {
-        //         return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
-        //     }
+            if (!errors.isEmpty()) {
+                return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
+            }
 
-        //     const { userid, totalprice, orderNote, deliveredAt, payment } = req.body
+            const { userid, totalprice, orderNote, deliveredAt } = req.body
 
-        //     const OrderRepo = getRepository(Order);
-        //     const CartRepo = getRepository(Cart);
+            const OrderRepo = getRepository(Order);
+            const CartRepo = getRepository(Cart);
 
-        //     let existingCart = await CartRepo.findOne({ where: { userid: { id: userid } }, relations: ['products_id'] });
+            let existingCart: any = await CartRepo.findOne({ where: { userid: { id: userid } }, relations: ['products_id'] });
+            if (existingCart) {
+                let cartTotal = 0;
+                let product
+                for (let i = 0; i < existingCart.products_id.length; i++) {
+                    product = existingCart.products_id[i];
+                    const quantity = parseInt(existingCart.quantity[i]);
 
-        //     if (existingCart) {
+                    if (!isNaN(product.disccount_price || product.price) && !isNaN(quantity)) {
+                        cartTotal += parseFloat(product.disccount_price || product.price) * quantity;
+                    } else {
+                        return RoutesHandler.sendError(res, req, 'Invalid price or quantity for product:', ResponseCodes.searchError);
+                    }
+                }
+                if (cartTotal == Number(totalprice)) {
+                    const instance = new Razorpay({
+                        key_id: process.env.RAZORPAY_KEY_ID,
+                        key_secret: process.env.RAZORPAY_KEY_SECRET,
+                    });
 
-        //         const gettotal = (item: any) => {
-        //             const Price = item?.disccount_price ? item?.disccount_price : item?.price
-        //             return Number(Price);
-        //         };
+                    const options = {
+                        amount: cartTotal,
+                        currency: "INR",
+                        receipt: "receipt_order_74394",
+                    };
+                    const order = await instance.orders.create(options);
+                    let productids = existingCart.products_id.map((item) => item)
+                    const NewOrder = await OrderRepo.save((await OrderRepo.create({
+                        userid: userid,
+                        totalprice: totalprice,
+                        order_item: productids,
+                        orderDetails: order,
+                    })));
 
-        //         let cartTotal;
-
-        //         existingCart?.products_id?.map((item, index) => {
-        //             const total = gettotal(item);
-        //             cartTotal = (Number(cartTotal) || 0) + Number(total);
-        //         }) || [];
-
-        //         if (cartTotal == Number(totalprice)) {
-        //             try {
-
-        //                 const instance = new Razorpay({
-        //                     key_id: process.env.RAZORPAY_KEY_ID,
-        //                     key_secret: process.env.RAZORPAY_KEY_SECRET,
-        //                 });
-
-        //                 const options = {
-        //                     amount: cartTotal,
-        //                     currency: "INR",
-        //                     receipt: "receipt_order_74394",
-        //                 };
-        //                 const order = await instance.orders.create(options);
-
-        //                 console.log(order, "order")
-        //                 // const qurey = await OrderRepo.create({
-        //                 //     userid: userid,
-        //                 //     totalprice: totalprice,
-        //                 //     order_item: existingCart.products_id
-        //                 // })
-
-        //                 // const NewOrder = await OrderRepo.save(qurey);
-        //             } catch (error) {
-        //                 console.log(error)
-        //             }
-
-        //         } else {
-        //             return RoutesHandler.sendError(res, req, 'Price Not Match', ResponseCodes.searchError);
-        //         }
-        //     } else {
-        //         return RoutesHandler.sendError(res, req, 'item Not Found', ResponseCodes.searchError);
-        //     }
-        // } catch (error) {
-        //     console.log(error, "Error")
-        //     return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
-        // }
+                    await CartRepo.remove(existingCart);
+                    return RoutesHandler.sendSuccess(res, req, NewOrder, "Order Successfully Added")
+                } else {
+                    return RoutesHandler.sendError(res, req, 'Price Not Match', ResponseCodes.searchError);
+                }
+            } else {
+                return RoutesHandler.sendError(res, req, 'Item Not Found', ResponseCodes.searchError);
+            }
+        } catch (error) {
+            console.log(error, "Error")
+            return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
+        }
     })
 }

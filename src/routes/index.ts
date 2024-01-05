@@ -12,6 +12,8 @@ import ColorRoute from './Color';
 import ShapeRoute from './Shape';
 import ContactRoute from './Contact';
 import OrderRoute from './Order';
+import BlogRoutes from './Blog';
+import BannerRoutes from './Banner';
 
 const Routes = express.Router();
 
@@ -28,5 +30,7 @@ Routes.use('/color', ColorRoute);
 Routes.use('/shape', ShapeRoute);
 Routes.use('/contact', ContactRoute);
 Routes.use('/order', OrderRoute);
+Routes.use('/blog', BlogRoutes);
+Routes.use('/banner', BannerRoutes);
 
 export default Routes;

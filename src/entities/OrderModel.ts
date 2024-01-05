@@ -46,6 +46,9 @@ export class Order {
     @Column({ nullable: true, default: payment_Status.Pendding })
     payment: number;
 
+    @Column({ type: 'json', nullable: true })
+    orderDetails: Record<string, any>;
+
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdAt: Date;
 
