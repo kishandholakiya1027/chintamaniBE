@@ -151,7 +151,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { subcategoryid, innnercategoryid, categoryid, minPrice, maxPrice, sort, mincarat, maxcarat, Clarity, Cuts, Color, shape } = req.query
+                const { subcategoryid, innnercategoryid, categoryid, minPrice, maxPrice, sort, mincarat, maxcarat, Clarity, Cuts, Color, shape, search } = req.query
 
                 const ProductRepo = getRepository(Product);
 
@@ -212,6 +212,17 @@ export class ProductController {
 
                 if (Color && Color.length) {
                     qurey.andWhere('Product.colour IN (:...colour)', { colour: JSON.parse(Color) })
+                }
+
+                if (search) {
+                    qurey.andWhere('(' +
+                        'Product.maintitle LIKE :search OR ' +
+                        'Product.title LIKE :search OR ' +
+                        'subcategoryid.name LIKE :search OR ' +
+                        'categoryid.name LIKE :search OR ' +
+                        'innercategoryid.name LIKE :search' +
+                        ')', { search: `%${search}%` });
+
                 }
 
                 qurey.skip((page - 1) * pageSize)
