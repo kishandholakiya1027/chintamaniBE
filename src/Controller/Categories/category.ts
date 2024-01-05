@@ -117,13 +117,22 @@ export class CategoryController {
         const CategoryRepo = getRepository(Category);
         const SubCategoryRepo = getRepository(SubCategory);
 
+
+        const page = req.query.page ? parseInt(req.query.page) : 1;
+        const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+
         const categories =
-          await CategoryRepo.createQueryBuilder("category").getMany();
+          await CategoryRepo.createQueryBuilder("category")
+            .select()
+            .skip((page - 1) * pageSize)
+            .take(pageSize)
+
+        const [categoriesdata, total] = await categories.getManyAndCount()
 
         const modifiedCategories = [];
 
-        for (let i = 0; i < categories.length; i++) {
-          const category = categories[i];
+        for (let i = 0; i < categoriesdata.length; i++) {
+          const category = categoriesdata[i];
 
           const subCategories = await SubCategoryRepo.createQueryBuilder(
             "subcategory"
@@ -141,7 +150,6 @@ export class CategoryController {
             image: category.image,
             createdAt: category.createdAt,
             updatedAt: category.updatedAt,
-            subcategory: subCategories.length > 0 ? subCategories[0].id : null,
           });
         }
 
@@ -157,7 +165,7 @@ export class CategoryController {
         return RoutesHandler.sendSuccess(
           res,
           req,
-          modifiedCategories,
+          { modifiedCategories, total, page, pageSize },
           "Categories fetched Successfully"
         );
       } catch (error) {

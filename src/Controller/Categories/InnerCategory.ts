@@ -100,34 +100,35 @@ export class InnerCategoryController {
       try {
         const InnerCategoryRepo = getRepository(InnerCategory);
 
-         await InnerCategoryRepo
+        const page = req.query.page ? parseInt(req.query.page) : 1;
+        const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
+
+        const InnerCategoryFindData = await InnerCategoryRepo
           .createQueryBuilder("innerCategory")
           .leftJoinAndSelect("innerCategory.subcategoryid", "subcategory")
-          .getMany()
-          .then((data) => {
-            const responseData = data.map((innerCategory) => ({
-              id: innerCategory.id,
-              name: innerCategory.name,
-              description: innerCategory.description,
-              image: innerCategory.image,
-              createdAt: innerCategory.createdAt,
-              updatedAt: innerCategory.updatedAt,
-              subCategory: innerCategory.subcategoryid.id,
-            }));
-            return res.status(ResponseCodes.success).json({
-              message: "SubCategory Fatched Successfully",
-              status: true,
-              data: responseData,
-            });
-          })
-          .catch((err) => {
-            console.log(err);
+          .select()
+          .skip((page - 1) * pageSize)
+          .take(pageSize)
 
-            return next({
-              statusCode: ResponseCodes.saveError,
-              message: "SubCategory can not be fatched",
-            });
-          });
+        const [InnerCategoryData, total] = await InnerCategoryFindData.getManyAndCount()
+
+        if (InnerCategoryData) {
+
+          const responseData = InnerCategoryData.map((innerCategory) => ({
+            id: innerCategory.id,
+            name: innerCategory.name,
+            description: innerCategory.description,
+            image: innerCategory.image,
+            createdAt: innerCategory.createdAt,
+            updatedAt: innerCategory.updatedAt,
+            subCategory: innerCategory.subcategoryid.id,
+          }));
+
+          return RoutesHandler.sendSuccess(res, req, { responseData, total, page, pageSize }, "SubCategory Fatched Successfully")
+
+        } else {
+          return RoutesHandler.sendSuccess(res, req, [], 'SubCategory Not Found');
+        }
       } catch (error) {
         return next({
           statusCode: ResponseCodes.serverError,

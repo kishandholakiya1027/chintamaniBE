@@ -134,37 +134,40 @@ export class SubCategoryController {
 
   public async getAllSubCategories(req: any, res: Response, next): Promise<any> {
     return new Promise(async (resolve, reject) => {
-     try {
-       const subCategoryRepo = getRepository(SubCategory);
+      try {
+        const subCategoryRepo = getRepository(SubCategory);
 
-       const subCategories = await subCategoryRepo
-         .createQueryBuilder("subCategory")
-         .leftJoinAndSelect("subCategory.categoryid", "category")
-         .getMany();
+        const page = req.query.page ? parseInt(req.query.page) : 1;
+        const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
 
-       const responseData = subCategories.map((subCategory) => ({
-         id: subCategory.id,
-         name: subCategory.name,
-         description: subCategory.description,
-         image: subCategory.image,
-         createdAt: subCategory.createdAt,
-         updatedAt: subCategory.updatedAt,
-         category: subCategory.categoryid.id, 
-       }));
+        const subCategories = await subCategoryRepo
+          .createQueryBuilder("subCategory")
+          .leftJoinAndSelect("subCategory.categoryid", "category")
+          .select()
+          .skip((page - 1) * pageSize)
+          .take(pageSize)
 
-       return res.status(ResponseCodes.success).json({
-         message: "SubCategory Fetched Successfully",
-         status: true,
-         data: responseData,
-       });
-     } catch (error) {
-       console.error(error);
+        const [SubCategoryData, total] = await subCategories.getManyAndCount()
 
-       return next({
-         statusCode: ResponseCodes.saveError,
-         message: "SubCategory cannot be fetched",
-       });
-     }
+        const responseData = SubCategoryData.map((subCategory) => ({
+          id: subCategory.id,
+          name: subCategory.name,
+          description: subCategory.description,
+          image: subCategory.image,
+          createdAt: subCategory.createdAt,
+          updatedAt: subCategory.updatedAt,
+          category: subCategory.categoryid.id,
+        }));
+
+        return RoutesHandler.sendSuccess(res, req, { responseData, total, page, pageSize }, "SubCategory Fetched Successfully")
+      } catch (error) {
+        console.error(error);
+
+        return next({
+          statusCode: ResponseCodes.saveError,
+          message: "SubCategory cannot be fetched",
+        });
+      }
     });
   }
 
