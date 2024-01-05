@@ -35,7 +35,7 @@ export const Cteate_Shape = (req: any, res: Response, next): Promise<any> => {
             const qurey = await ShapeRepo.create({
                 name: name,
                 description: description,
-                image: shapeimage[0].fileName
+                image: shapeimage ? shapeimage[0]?.fileName : null
             })
 
             const NewShape = await ShapeRepo.save(qurey);

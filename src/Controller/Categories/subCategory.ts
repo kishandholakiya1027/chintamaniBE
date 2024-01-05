@@ -36,7 +36,7 @@ export class SubCategoryController {
           name,
           categoryid: categoryid,
           description,
-          image: subcategoryimage[0].fileName,
+          image: subcategoryimage ? subcategoryimage[0]?.fileName : null,
         };
 
         const newSubCategory = subCategoryRepo.create(subcategory);

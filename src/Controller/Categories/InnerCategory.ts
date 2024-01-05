@@ -37,7 +37,7 @@ export class InnerCategoryController {
           name,
           subcategoryid: subcategoryid,
           description,
-          image: InnerCategporyimage[0].fileName,
+          image: InnerCategporyimage ? InnerCategporyimage[0]?.fileName : null,
         };
 
         const newSubCategory = InnerCategoryRepo.create(subcategory);

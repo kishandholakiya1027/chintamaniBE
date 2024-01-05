@@ -44,7 +44,7 @@ export class CategoryController {
           const CategoryData = await CategoryRepo.create({
             name: name,
             description: description,
-            image: categoryimage[0].fileName
+            image: categoryimage ? categoryimage[0]?.fileName : null
           });
 
           CategoryRepo.save(CategoryData)
@@ -110,64 +110,64 @@ export class CategoryController {
     });
   }
 
-  
+
   public async getCategory(req: any, res: Response, next): Promise<any> {
     return new Promise(async (resolve, reject) => {
-   try {
-     const CategoryRepo = getRepository(Category);
-     const SubCategoryRepo = getRepository(SubCategory);
+      try {
+        const CategoryRepo = getRepository(Category);
+        const SubCategoryRepo = getRepository(SubCategory);
 
-     const categories =
-       await CategoryRepo.createQueryBuilder("category").getMany();
+        const categories =
+          await CategoryRepo.createQueryBuilder("category").getMany();
 
-     const modifiedCategories = [];
+        const modifiedCategories = [];
 
-     for (let i = 0; i < categories.length; i++) {
-       const category = categories[i];
+        for (let i = 0; i < categories.length; i++) {
+          const category = categories[i];
 
-       const subCategories = await SubCategoryRepo.createQueryBuilder(
-         "subcategory"
-       )
-         .select(["subcategory.id"])
-         .where("subcategory.categoryid = :categoryid", {
-           categoryid: category.id,
-         })
-         .getMany();
+          const subCategories = await SubCategoryRepo.createQueryBuilder(
+            "subcategory"
+          )
+            .select(["subcategory.id"])
+            .where("subcategory.categoryid = :categoryid", {
+              categoryid: category.id,
+            })
+            .getMany();
 
-       modifiedCategories.push({
-         id: category.id,
-         name: category.name,
-         description: category.description,
-         image: category.image,
-         createdAt: category.createdAt,
-         updatedAt: category.updatedAt,
-         subcategory: subCategories.length > 0 ? subCategories[0].id : null,
-       });
-     }
+          modifiedCategories.push({
+            id: category.id,
+            name: category.name,
+            description: category.description,
+            image: category.image,
+            createdAt: category.createdAt,
+            updatedAt: category.updatedAt,
+            subcategory: subCategories.length > 0 ? subCategories[0].id : null,
+          });
+        }
 
-     if (!modifiedCategories || modifiedCategories.length === 0) {
-       return RoutesHandler.sendError(
-         res,
-         req,
-         "Category Not Found",
-         ResponseCodes.success
-       );
-     }
+        if (!modifiedCategories || modifiedCategories.length === 0) {
+          return RoutesHandler.sendError(
+            res,
+            req,
+            "Category Not Found",
+            ResponseCodes.success
+          );
+        }
 
-     return RoutesHandler.sendSuccess(
-       res,
-       req,
-       modifiedCategories,
-       "Categories fetched Successfully"
-     );
-   } catch (error) {
-     return RoutesHandler.sendError(
-       res,
-       req,
-       "Internal Server Error",
-       ResponseCodes.serverError
-     );
-   }
+        return RoutesHandler.sendSuccess(
+          res,
+          req,
+          modifiedCategories,
+          "Categories fetched Successfully"
+        );
+      } catch (error) {
+        return RoutesHandler.sendError(
+          res,
+          req,
+          "Internal Server Error",
+          ResponseCodes.serverError
+        );
+      }
     });
   }
 
