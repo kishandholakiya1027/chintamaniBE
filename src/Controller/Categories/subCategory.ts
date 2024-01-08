@@ -234,7 +234,7 @@ export class SubCategoryController {
           );
         }
 
-        await subCategoryRepo.update(
+        const UpdatedSUbcategory = await subCategoryRepo.update(
           { id: existingSubCategory.id },
           {
             name,
@@ -245,6 +245,7 @@ export class SubCategoryController {
         );
         return res.status(ResponseCodes.success).json({
           message: 'SubCategory updated successfully',
+          data : UpdatedSUbcategory
         });
       } catch (error) {
         console.error(error);
@@ -279,6 +280,7 @@ export class SubCategoryController {
         return res.status(ResponseCodes.success).json({
           message: 'Category deleted successfully',
         });
+        
       } catch (error) {
         console.error(error);
         return next({

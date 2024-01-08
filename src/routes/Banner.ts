@@ -1,11 +1,11 @@
 import * as express from 'express';
 import { Create_Banner } from '../Controller/Banner/create_banner';
-import { fetch_All_Banner, fetch_Banner } from '../Controller/Banner/fetch_Banner';
-import { Update_Banner } from '../Controller/Banner/update_Banner';
-import { Remove_Banner } from '../Controller/Banner/delete_Banner';
 import { upload } from '../services/multer';
 import { Banner_Fetch_validator, Banner_Remove_validator, Banner_Update_validator, Banner_create_validator } from '../Validator/BannerValidator';
 import { AUTH } from '../utils/auth';
+import { fetch_All_Banner, fetch_Banner } from '../Controller/Banner/fetch_banner';
+import { Update_Banner } from '../Controller/Banner/update_banner';
+import { Remove_Banner } from '../Controller/Banner/delete_banner';
 
 const Routes = express.Router();
 

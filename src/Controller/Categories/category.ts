@@ -275,11 +275,11 @@ export class CategoryController {
         categoryToUpdate.description = description || categoryToUpdate.description;
         categoryToUpdate.image = image || categoryToUpdate.image;
 
-        await categoryRepo.save(categoryToUpdate);
+        const UpdateCategory = await categoryRepo.save(categoryToUpdate);
 
         return res.status(ResponseCodes.success).json({
           message: 'Category updated successfully',
-          data: categoryToUpdate,
+          data: UpdateCategory,
         });
       } catch (error) {
         console.error(error);

@@ -45,7 +45,7 @@ export class InnerCategoryController {
         await InnerCategoryRepo.save(newSubCategory);
 
         return res.status(ResponseCodes.success).json({
-          message: 'SubCategory created successfully',
+          message: 'InnerCategory created successfully',
           data: newSubCategory,
         });
 
@@ -79,7 +79,7 @@ export class InnerCategoryController {
 
             return next({
               statusCode: ResponseCodes.saveError,
-              message: 'SubCategory can not be fatched',
+              message: 'Inner Category can not be fatched',
             });
           });
       } catch (error) {
@@ -124,10 +124,10 @@ export class InnerCategoryController {
             subCategory: innerCategory.subcategoryid.id,
           }));
 
-          return RoutesHandler.sendSuccess(res, req, { responseData, total, page, pageSize }, "SubCategory Fatched Successfully")
+          return RoutesHandler.sendSuccess(res, req, { responseData, total, page, pageSize }, "Inner Category Fatched Successfully")
 
         } else {
-          return RoutesHandler.sendSuccess(res, req, [], 'SubCategory Not Found');
+          return RoutesHandler.sendSuccess(res, req, [], 'Inner Category Not Found');
         }
       } catch (error) {
         return next({
@@ -160,14 +160,14 @@ export class InnerCategoryController {
 
         if (data) {
           return res.status(ResponseCodes.success).json({
-            message: 'SubCategory Fetched Successfully',
+            message: 'Inner Category Fetched Successfully',
             status: true,
             data: data,
           });
         } else {
           return next({
             statusCode: ResponseCodes.userError,
-            message: 'SubCategory not found',
+            message: 'Inner Category not found',
           });
         }
       } catch (error) {
@@ -208,12 +208,12 @@ export class InnerCategoryController {
           return RoutesHandler.sendError(
             res,
             req,
-            'SubCategory not found',
+            'inner Category not found',
             ResponseCodes.userError
           );
         }
 
-        await InnerCategoryRepo.update(
+        const UpdatedInnerCategory = await InnerCategoryRepo.update(
           { id: existingInnerCategory.id },
           {
             name,
@@ -223,7 +223,8 @@ export class InnerCategoryController {
           }
         );
         return res.status(ResponseCodes.success).json({
-          message: 'SubCategory updated successfully',
+          message: 'inner Category updated successfully',
+          data: UpdatedInnerCategory
         });
       } catch (error) {
         console.error(error);
@@ -249,14 +250,14 @@ export class InnerCategoryController {
         if (!categoryToDelete) {
           return next({
             statusCode: ResponseCodes.userError,
-            message: 'Category not found',
+            message: 'Inner Category not found',
           });
         }
 
         await InnerCategoryRepo.remove(categoryToDelete);
 
         return res.status(ResponseCodes.success).json({
-          message: 'Category deleted successfully',
+          message: 'Inner Category deleted successfully',
         });
       } catch (error) {
         console.error(error);
