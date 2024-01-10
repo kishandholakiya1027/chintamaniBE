@@ -23,7 +23,7 @@ export class Contact {
     @Column({ nullable: true })
     comment: string;
 
-    @Column({ default: Status.DEFAULT })
+    @Column({ default: Status.ACTIVE })
     status: number;
 
     @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

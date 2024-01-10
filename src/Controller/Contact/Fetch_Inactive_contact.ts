@@ -15,7 +15,7 @@ export const Fetch_Inactive_Contact = (req: any, res: Response, next): Promise<a
 
             const qurey = ContactRepo.createQueryBuilder('Contact')
                 .select()
-                .where('Contact.status = :status', { status: Status.DEFAULT })
+                .where('Contact.status = :status', { status: Status.INACTIVE })
                 .skip((page - 1) * pageSize)
                 .take(pageSize)
 
