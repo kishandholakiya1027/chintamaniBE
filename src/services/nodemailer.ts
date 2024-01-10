@@ -10,16 +10,16 @@ const sendEmail = async (email: string, otp: string): Promise<void> => {
       requireTLS: true,
       auth: {
         type: "OAuth2",
-        user: process.env.SMPT_MAIL,
-        pass: process.env.SMPT_PASSWORD,
-        clientId: process.env.MAILCLIENT_ID,
-        clientSecret: process.env.MAILCLIENT_SECRET,
-        refreshToken: process.env.MAILREFRESH_TOKEN,
+        user: 'bharatdeny771@gmail.com',
+        pass: 'ycgp xncf nvvc oftq',
+        clientId: '727533022015-agi1p2hukban7g6pa14famf7i82bn24d.apps.googleusercontent.com',
+        clientSecret: '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',
+        refreshToken: '1//04hGDPpdX0J2PCgYIARAAGAQSNwF-L9Ir3qxJuegxfgjZWenUT_ziMIKUrsn6r3j6PbpnjfFN0sT4nKtMHQSsOmEU3fh179XQuyY',
       },
     }));
 
     const mailConfigurations = {
-      from: process.env.SMPT_MAIL,
+      from: 'bharatdeny771@gmail.com',
       to: email,
       subject: "OTP for Registration",
       html: `

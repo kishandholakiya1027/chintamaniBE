@@ -37,8 +37,8 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                 }
                 if (cartTotal == Number(totalprice)) {
                     const instance = new Razorpay({
-                        key_id: process.env.RAZORPAY_KEY_ID,
-                        key_secret: process.env.RAZORPAY_KEY_SECRET,
+                        key_id: 'rzp_test_OiDl4onYPZ2HUs',
+                        key_secret: '6OJF5WwjLdg1ECGpXtws6UPq',
                     });
 
                     const options = {

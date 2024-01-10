@@ -45,7 +45,7 @@ export class FileService {
             try {
                 await b2.authorize();
                 const data = await b2.getUploadUrl({
-                    bucketId: process.env.BLACKBLAZE_BUCKETID
+                    bucketId: 'a137cb7de7e9a2f488c40b17'
                 })
 
                 const readDataData = await this.streamToBuffer(fs.createReadStream(file));
@@ -58,7 +58,7 @@ export class FileService {
                     data: readDataData,
                     contentLength: 1000000000
                 });
-                resolve({ fileName: `${process.env.BACKBLAZE_ACCESS_URL}${response.data.fileName}`, fileId: response?.data?.fileId })
+                resolve({ fileName: `https://chintamanigems.s3.us-east-005.backblazeb2.com/${response.data.fileName}`, fileId: response?.data?.fileId })
             }
             catch (error: any) {
                 console.log("error = " + error)
@@ -72,7 +72,7 @@ export class FileService {
             try {
                 await b2.authorize();
                 const data = await b2.getUploadUrl({
-                    bucketId: process.env.BLACKBLAZE_BUCKETID
+                    bucketId: 'a137cb7de7e9a2f488c40b17'
                 })
                 // const readData = fs.readFileSync(file['image'][0]);
                 let base64Image = file?.split(";base64,");
@@ -87,7 +87,7 @@ export class FileService {
                     data: readData,
                     contentLength: 1000000000
                 });
-                resolve({ fileName: `${process.env.BACKBLAZE_ACCESS_URL}${response.data.fileName}`, fileId: response?.data?.fileId })
+                resolve({ fileName: `https://chintamanigems.s3.us-east-005.backblazeb2.com/${response.data.fileName}`, fileId: response?.data?.fileId })
             }
             catch (error: any) {
                 console.log("error = " + error)
