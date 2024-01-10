@@ -7,7 +7,7 @@ import { validationResult } from "express-validator";
 import { Product } from "../../entities/ProductModel";
 
 export class CartController {
-  constructor() {}
+  constructor() { }
 
   public async CreateCart(req: any, res: Response, next): Promise<any> {
     return new Promise(async (resolve, reject) => {
@@ -23,7 +23,7 @@ export class CartController {
           );
         }
 
-        const { userid, productid, quantity } = req.body; // Add quantity to the request body
+        const { userid, productid, quantity } = req.body;
 
         const CartRepo = getRepository(Cart);
         const ProductRepo = getRepository(Product);
@@ -35,6 +35,11 @@ export class CartController {
 
         if (existingCart) {
           if (existingCart.products_id.some((item) => item.id === productid)) {
+            const existingProductIndex = existingCart.products_id.findIndex((item) => item.id === productid);
+            existingCart.quantity[existingProductIndex] = quantity;
+
+            await CartRepo.save(existingCart);
+
             return RoutesHandler.sendError(
               res,
               req,
