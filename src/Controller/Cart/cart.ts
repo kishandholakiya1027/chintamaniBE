@@ -35,10 +35,6 @@ export class CartController {
 
         if (existingCart) {
           if (existingCart.products_id.some((item) => item.id === productid)) {
-            const existingProductIndex = existingCart.products_id.findIndex((item) => item.id === productid);
-            existingCart.quantity[existingProductIndex] = quantity;
-
-            await CartRepo.save(existingCart);
 
             return RoutesHandler.sendError(
               res,
@@ -124,6 +120,73 @@ export class CartController {
             "Cart Created Successfully"
           );
         }
+      } catch (error) {
+        console.log(error, "Error");
+        return RoutesHandler.sendError(
+          res,
+          req,
+          "Internal Server Error",
+          ResponseCodes.serverError
+        );
+      }
+    });
+  }
+
+  public async UpdateQuentity(req: any, res: Response, next): Promise<any> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+          return RoutesHandler.sendError(
+            res,
+            req,
+            errors.array(),
+            ResponseCodes.inputError
+          );
+        }
+
+        const { userid, productid, quantity } = req.body;
+
+        const CartRepo = getRepository(Cart);
+        const ProductRepo = getRepository(Product);
+
+        let existingCart = await CartRepo.findOne({
+          where: { userid: { id: userid } },
+          relations: ["products_id"],
+        });
+        if (existingCart) {
+          const existingProductIndex = existingCart.products_id.findIndex((item) => item.id === productid);
+          existingCart.quantity[existingProductIndex] = quantity;
+          await CartRepo.save(existingCart);
+          const productResponse = existingCart.products_id.map(
+            (product, index) => ({
+              product: product,
+              quantity: existingCart.quantity[index],
+            })
+          );
+
+          let responceData = {
+            id: existingCart.id,
+            userid: existingCart.userid,
+            products: productResponse,
+            createdAt: existingCart.createdAt,
+            updatedAt: existingCart.updatedAt,
+          };
+          return RoutesHandler.sendSuccess(
+            res,
+            req,
+            responceData,
+            "Product Quantity Updated Successfully"
+          );
+        }
+        return RoutesHandler.sendError(
+          res,
+          req,
+          "Product is not in cart",
+          ResponseCodes.general
+        );
+
       } catch (error) {
         console.log(error, "Error");
         return RoutesHandler.sendError(
