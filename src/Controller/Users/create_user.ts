@@ -31,7 +31,7 @@ export class UserController {
         const UserRepo = getRepository(User)
         const OtpsRepo = getRepository(Otps)
 
-        const qurey = await UserRepo.findOne({ where: { email: email, status: Status.INACTIVE } })
+        const qurey = await UserRepo.findOne({ where: { email: email } })
 
         if (qurey) {
           return RoutesHandler.sendError(res, req, 'User already in Exist Try to login', ResponseCodes.general);
@@ -93,7 +93,7 @@ export class UserController {
         const qurey = await OtpsRepo.findOne({ where: { email: email } })
 
         if (qurey) {
-          return RoutesHandler.sendError(res, req, 'User already in Exist', ResponseCodes.general);
+          return RoutesHandler.sendSuccess(res, req, true, 'Resend your Otp');
         }
 
         const generate6digitOTp: any = await generateOTPFunc();

@@ -14,7 +14,7 @@ class AuthController {
 
     // Function to generate an authentication token
     generateAuthToken(userId: any): string {
-        const token = jwt.sign({ userId }, this.secretKey, { expiresIn: '1h' });
+        const token = jwt.sign({ userId }, this.secretKey, { expiresIn: '1d' });
         return token;
     }
 

@@ -12,6 +12,8 @@ Routes.post('/create', AUTH, Productmultiplefile, ProductControllers.CreateProdu
 
 Routes.get('/product', fetch_product_create_validator, ProductControllers.fetchProduct);
 
+Routes.get('/single/product/:productId', delete_product_validator, ProductControllers.single_fetchProduct);
+
 Routes.post('/updatefile', upload, ProductControllers.UpdateFile);
 
 Routes.patch('/update', AUTH, update_product_validator, ProductControllers.UpdateProduct);

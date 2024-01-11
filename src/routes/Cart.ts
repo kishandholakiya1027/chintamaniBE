@@ -1,6 +1,6 @@
 import * as express from 'express';
 import { CartController } from '../Controller/Cart/cart';
-import { Create_Cart_validator, Fetch_Cart_validator, Update_Cart_validator } from '../Validator/CartValidator';
+import { Create_Cart_validator, Fetch_Cart_validator, Remove_Cart_validator, Update_Cart_validator } from '../Validator/CartValidator';
 import { AUTH } from '../utils/auth';
 const Routes = express.Router();
 
@@ -30,7 +30,7 @@ Routes.get(
 Routes.post(
     "/remove",
     AUTH,
-    Create_Cart_validator,
+    Remove_Cart_validator,
     AddToCartController.RemoveCart
 );
 

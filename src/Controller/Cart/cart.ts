@@ -226,10 +226,25 @@ export class CartController {
           return RoutesHandler.sendSuccess(res, req, [], "Item Not Found");
         }
 
+        const productResponse = existingCart.products_id.map(
+          (product, index) => ({
+            product: product,
+            quantity: existingCart.quantity[index],
+          })
+        );
+
+        let responceData = {
+          id: existingCart.id,
+          userid: existingCart.userid,
+          products: productResponse,
+          createdAt: existingCart.createdAt,
+          updatedAt: existingCart.updatedAt,
+        };
+
         return RoutesHandler.sendSuccess(
           res,
           req,
-          existingCart,
+          responceData,
           "Item Found Successfully"
         );
       } catch (error) {

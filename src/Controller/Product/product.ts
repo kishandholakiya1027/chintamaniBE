@@ -96,19 +96,19 @@ export class ProductController {
                         diamond_size: {
                             size: size,
                             size_desc: size_desc,
-                            sizeimages: sizeimages[0].fileName
+                            sizeimages: sizeimages[0]?.fileName
                         },
                         diamond_color: {
                             color_desc: color_desc,
-                            colorimage: colorimage[0].fileName,
+                            colorimage: colorimage[0]?.fileName,
                         },
                         diamond_clarity: {
                             clarity_desc: clarity_desc,
-                            clarityimage: clarityimage[0].fileName,
+                            clarityimage: clarityimage[0]?.fileName,
                         },
                         diamond_cut: {
                             cut_desc: cut_desc,
-                            cutimage: cutimage[0].fileName,
+                            cutimage: cutimage[0]?.fileName,
                         },
                         categoryid: categoryid
                     })
@@ -378,6 +378,41 @@ export class ProductController {
                     });
             } catch (error) {
                 console.log(error, 'Error');
+                return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
+            }
+        });
+    }
+
+    public async single_fetchProduct(req: any, res: Response, next): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                const errors = validationResult(req);
+
+                if (!errors.isEmpty()) {
+                    return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
+                }
+
+                const { productId } = req.params
+
+                const ProductRepo = getRepository(Product);
+
+                const qurey = ProductRepo.createQueryBuilder('Product')
+                    .leftJoinAndSelect('Product.subcategoryid', 'subcategoryid')
+                    .leftJoinAndSelect('Product.categoryid', 'categoryid')
+                    .leftJoinAndSelect('Product.innercategoryid', 'innercategoryid')
+                    .where('Product.id = :id ', { id: productId })
+                    .select()
+
+                const product = await qurey.getOne()
+
+                if (!product) {
+                    return RoutesHandler.sendError(res, req, 'Category Not Found', ResponseCodes.success);
+                }
+
+                return RoutesHandler.sendSuccess(res, req, product, "Category Created Successfully")
+            } catch (error) {
+                console.log(error, "Error")
                 return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
             }
         });
