@@ -37,7 +37,7 @@ export class Order {
     @Column({ type: 'bigint', nullable: true })
     totalprice: number;
 
-    @Column({ nullable: true, default: Order_Status.Processing })
+    @Column({ nullable: true, default: Order_Status.Ongoing })
     orderstatus: number;
 
     @Column({ nullable: true })

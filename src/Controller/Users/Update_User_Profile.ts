@@ -14,7 +14,7 @@ export const Update_User = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { userid, firstname, lastname, mobile, Address, Comment } = req.body
+            const { userid, firstname, lastname, mobile, Address, Comment, image } = req.body
 
             const UserRepo = getRepository(User);
 
@@ -29,6 +29,7 @@ export const Update_User = (req: any, res: Response, next): Promise<any> => {
             existingUser.mobile = mobile || existingUser.mobile
             existingUser.Address = Address || existingUser.Address
             existingUser.Comment = Comment || existingUser.Comment
+            existingUser.image = image || existingUser.image
 
             await UserRepo.save(existingUser)
                 .then((data) => {
