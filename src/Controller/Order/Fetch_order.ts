@@ -12,6 +12,7 @@ export const getAllOrders = async (req: any, res: Response, next): Promise<any> 
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
 
     const orders = await orderRepository.createQueryBuilder('order')
+      .leftJoinAndSelect('order.order_item', 'order_item')
       .select()
       .skip((page - 1) * pageSize)
       .take(pageSize)

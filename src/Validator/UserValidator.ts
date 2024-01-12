@@ -12,3 +12,7 @@ export const User_Fetch_validator = [
 export const Remove_admin_validator = [
   param('adminid').notEmpty().withMessage('adminid is required')
 ];
+
+export const User_Update_validator = [
+  body('userid').notEmpty().withMessage('userid is required').isString()
+];

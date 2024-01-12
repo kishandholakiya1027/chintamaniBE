@@ -36,6 +36,12 @@ export class User {
   @Column({ nullable: true })
   password: string;
 
+  @Column({ nullable: true })
+  Address: string;
+
+  @Column({ nullable: true })
+  Comment: string;
+
   @Column({ default: Status.ACTIVE })
   status: number;
 

@@ -19,7 +19,7 @@ class AuthController {
     }
 
     generateForgetPasswordToken(userId: any, status: number): string {
-        const token = jwt.sign({ userId, status }, this.secretKey, { expiresIn: '10m' });
+        const token = jwt.sign({ userId, status }, this.secretKey, { expiresIn: '5m' });
         return token;
     }
 

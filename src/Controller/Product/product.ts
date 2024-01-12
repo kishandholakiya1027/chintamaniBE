@@ -231,10 +231,10 @@ export class ProductController {
                 const [product, total] = await qurey.getManyAndCount()
 
                 if (!product || product.length === 0) {
-                    return RoutesHandler.sendError(res, req, 'Category Not Found', ResponseCodes.success);
+                    return RoutesHandler.sendError(res, req, 'Product Not Found', ResponseCodes.success);
                 }
 
-                return RoutesHandler.sendSuccess(res, req, { product, total, page, pageSize }, "Category Created Successfully")
+                return RoutesHandler.sendSuccess(res, req, { product, total, page, pageSize }, "Product Created Successfully")
             } catch (error) {
                 console.log(error, "Error")
                 return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);
@@ -407,10 +407,10 @@ export class ProductController {
                 const product = await qurey.getOne()
 
                 if (!product) {
-                    return RoutesHandler.sendError(res, req, 'Category Not Found', ResponseCodes.success);
+                    return RoutesHandler.sendError(res, req, 'Product Not Found', ResponseCodes.success);
                 }
 
-                return RoutesHandler.sendSuccess(res, req, product, "Category Created Successfully")
+                return RoutesHandler.sendSuccess(res, req, product, "Product Found Successfully")
             } catch (error) {
                 console.log(error, "Error")
                 return RoutesHandler.sendError(res, req, 'Internal Server Error', ResponseCodes.serverError);

@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Remove_admin_validator, User_Fetch_validator, User_create_validator } from '../Validator/UserValidator';
+import { Remove_admin_validator, User_Fetch_validator, User_Update_validator, User_create_validator } from '../Validator/UserValidator';
 import { UserController } from '../Controller/Users/create_user';
 import { AUTH } from '../utils/auth';
 import { Login } from '../Controller/Users/login_user';
@@ -7,11 +7,15 @@ import { Fetch_Active_User } from '../Controller/Users/fetch_user';
 import { Assing_Admin } from '../Controller/Users/AssingAdmin';
 import { Remove_Admin } from '../Controller/Users/Remove_Admin';
 import { Fetch_Active_Admin } from '../Controller/Users/Fetch_Admin';
+import { Update_User } from '../Controller/Users/Update_User_Profile';
+import { Logout_User } from '../Controller/Users/Logout';
 
 const Routes = express.Router();
 const userController = new UserController();
 
 Routes.post('/create', User_create_validator, userController.CreateUser);
+
+Routes.patch('/update', User_Update_validator, Update_User);
 
 Routes.post('/verification', User_create_validator, userController.VerificationUser);
 
@@ -34,5 +38,7 @@ Routes.post('/assing/admin', User_create_validator, Assing_Admin);
 Routes.patch('/remove/admin/:adminid', Remove_admin_validator, Remove_Admin);
 
 Routes.get('/admin', Fetch_Active_Admin);
+
+Routes.post('/logout', User_Update_validator, Logout_User);
 
 export default Routes;

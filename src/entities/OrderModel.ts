@@ -31,6 +31,9 @@ export class Order {
     @JoinTable({ name: 'order_item' })
     order_item: Product[];
 
+    @Column({ type: 'simple-array', default: [] }) 
+    quantity: number[];
+
     @Column({ type: 'bigint', nullable: true })
     totalprice: number;
 

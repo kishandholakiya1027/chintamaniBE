@@ -252,6 +252,7 @@ export class UserController {
         if (userOtp) {
 
           const userData = await UserRepo.findOne({ where: { email } });
+          console.log(userData, "userData")
 
           let ForgetPasswordToken = authController.generateForgetPasswordToken(userData.id, 5)
 
@@ -284,11 +285,12 @@ export class UserController {
         }
 
         const UserRepo = getRepository(User)
+        
         const UserData = req.tokenPayload
 
         if (UserData.status === FORGET_PASSWORD.status) {
 
-          const OldUserData = await UserRepo.findOne({ where: { id: UserData.id } });
+          const OldUserData = await UserRepo.findOne({ where: { id: UserData.userId } });
 
           if (OldUserData) {
 
@@ -332,7 +334,7 @@ export class UserController {
 
         const UserRepo = getRepository(User)
 
-        const OldUserData = await UserRepo.findOne({ where: { id: UserData.id } });
+        const OldUserData = await UserRepo.findOne({ where: { id: UserData.userId } });
 
         const comparePassword = await comparepassword(old_pass, OldUserData.password)
 

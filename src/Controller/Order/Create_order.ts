@@ -47,7 +47,9 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                         receipt: "receipt_order_74394",
                     };
                     const order = await instance.orders.create(options);
+                    
                     let productids = existingCart.products_id.map((item) => item)
+                    
                     const NewOrder = await OrderRepo.save((await OrderRepo.create({
                         userid: userid,
                         totalprice: totalprice,
