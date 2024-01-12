@@ -16,23 +16,40 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { userid, totalprice, orderNote, deliveredAt } = req.body
+            const { userid, totalprice, orderNote, deliveredAt, products = [] } = req.body;
 
             const OrderRepo = getRepository(Order);
             const CartRepo = getRepository(Cart);
 
             let existingCart: any = await CartRepo.findOne({ where: { userid: { id: userid } }, relations: ['products_id'] });
+
             if (existingCart) {
                 let cartTotal = 0;
-                let product
+                let quantity = [];
                 for (let i = 0; i < existingCart.products_id.length; i++) {
-                    product = existingCart.products_id[i];
-                    const quantity = parseInt(existingCart.quantity[i]);
-
-                    if (!isNaN(product.disccount_price || product.price) && !isNaN(quantity)) {
-                        cartTotal += parseFloat(product.disccount_price || product.price) * quantity;
+                    const product = existingCart.products_id[i];
+                    const productQuantity = parseInt(existingCart.quantity[i]);
+                    const updatedProduct = products.find((p) => p.id === product.id);
+                    if (updatedProduct) {
+                        const quantityToUpdate = parseInt(updatedProduct.quantity);
+                        const finalQuantity = !isNaN(quantityToUpdate) ? quantityToUpdate : productQuantity;
+                        if (!isNaN(product.disccount_price || product.price) && !isNaN(finalQuantity)) {
+                            cartTotal += parseFloat(product.disccount_price || product.price) * finalQuantity;
+                            quantity.push({
+                                quantity: finalQuantity
+                            });
+                        } else {
+                            return RoutesHandler.sendError(res, req, 'Invalid price or quantity for product:', ResponseCodes.searchError);
+                        }
                     } else {
-                        return RoutesHandler.sendError(res, req, 'Invalid price or quantity for product:', ResponseCodes.searchError);
+                        if (!isNaN(product.disccount_price || product.price) && !isNaN(productQuantity)) {
+                            cartTotal += parseFloat(product.disccount_price || product.price) * productQuantity;
+                            quantity.push({
+                                quantity: productQuantity
+                            });
+                        } else {
+                            return RoutesHandler.sendError(res, req, 'Invalid price or quantity for product:', ResponseCodes.searchError);
+                        }
                     }
                 }
                 if (cartTotal == Number(totalprice)) {
@@ -47,18 +64,40 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                         receipt: "receipt_order_74394",
                     };
                     const order = await instance.orders.create(options);
-                    
+
                     let productids = existingCart.products_id.map((item) => item)
-                    
+
                     const NewOrder = await OrderRepo.save((await OrderRepo.create({
+                        quantity: quantity.map(item => item.quantity),
                         userid: userid,
                         totalprice: totalprice,
                         order_item: productids,
                         orderDetails: order,
                     })));
-
                     await CartRepo.remove(existingCart);
-                    return RoutesHandler.sendSuccess(res, req, NewOrder, "Order Successfully Added")
+
+                    const productResponse = NewOrder.order_item.map(
+                        (product, index) => ({
+                            product: product,
+                            quantity: quantity[index].quantity
+                        })
+                    );
+                    let responceData = {
+                        id: NewOrder.id,
+                        userid: NewOrder.userid,
+                        totalprice: existingCart.userid,
+                        products: productResponse,
+                        orderDetails: NewOrder.orderDetails,
+                        orderstatus: NewOrder.orderstatus,
+                        orderNote: NewOrder.orderNote,
+                        deliveredAt: NewOrder.deliveredAt,
+                        payment: NewOrder.payment,
+                        createdAt: existingCart.createdAt,
+                        updatedAt: existingCart.updatedAt,
+                    };
+
+
+                    return RoutesHandler.sendSuccess(res, req, responceData, "Order Successfully Added")
                 } else {
                     return RoutesHandler.sendError(res, req, 'Price Not Match', ResponseCodes.searchError);
                 }
