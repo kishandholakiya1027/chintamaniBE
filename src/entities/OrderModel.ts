@@ -46,6 +46,9 @@ export class Order {
     @Column({ nullable: true })
     deliveredAt: Date
 
+    @Column({ nullable: true })
+    Address: string;
+
     @Column({ nullable: true, default: payment_Status.Pendding })
     payment: number;
 

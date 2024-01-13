@@ -7,7 +7,11 @@ import { Order } from "../../entities/OrderModel";
 
 export const getAllOrders = async (req: any, res: Response, next): Promise<any> => {
   try {
+
+    const orderstatus = req.query.orderstatus
+
     const orderRepository = getRepository(Order);
+
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
 
@@ -16,6 +20,10 @@ export const getAllOrders = async (req: any, res: Response, next): Promise<any> 
       .select()
       .skip((page - 1) * pageSize)
       .take(pageSize)
+
+    if (orderstatus) {
+      orders.where('order.orderstatus = :orderstatus ', { orderstatus: Number(orderstatus) })
+    }
 
     const [Orderdata, total] = await orders.getManyAndCount()
 
