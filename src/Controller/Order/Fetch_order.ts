@@ -22,7 +22,25 @@ export const getAllOrders = async (req: any, res: Response, next): Promise<any> 
     if (!Orderdata || Orderdata.length === 0) {
       return RoutesHandler.sendSuccess(res, req, [], 'Order Not Found');
     }
-    return RoutesHandler.sendSuccess(res, req, { Orderdata, total, page, pageSize }, "Order Successfully Added");
+
+    const responceData = Orderdata.map((order) => ({
+      id: order.id,
+      userid: order.userid,
+      totalprice: order.totalprice,
+      orderDetails: order.orderDetails,
+      orderstatus: order.orderstatus,
+      orderNote: order.orderNote,
+      deliveredAt: order.deliveredAt,
+      payment: order.payment,
+      createdAt: order.createdAt,
+      updatedAt: order.updatedAt,
+      productResponse: order.order_item.map((item, index) => ({
+        product: item,
+        quantity: order.quantity[index],
+      })),
+    }));
+
+    return RoutesHandler.sendSuccess(res, req, { responceData, total, page, pageSize }, "Order Successfully Added");
 
   } catch (error) {
     console.log(error, "Error");

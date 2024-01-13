@@ -28,7 +28,27 @@ export const Fetch_single_Orders = async (req: any, res: Response, next): Promis
         if (!Orderdata) {
             return RoutesHandler.sendSuccess(res, req, [], 'Order Not Found');
         }
-        return RoutesHandler.sendSuccess(res, req, Orderdata, "Order Successfully found");
+
+        const productResponse = Orderdata.order_item.map(
+            (product, index) => ({
+                product: product,
+                quantity: Orderdata.quantity[index]
+            })
+        );
+        let responceData = {
+            id: Orderdata.id,
+            userid: Orderdata.userid,
+            totalprice: Orderdata.userid,
+            products: productResponse,
+            orderDetails: Orderdata.orderDetails,
+            orderstatus: Orderdata.orderstatus,
+            orderNote: Orderdata.orderNote,
+            deliveredAt: Orderdata.deliveredAt,
+            payment: Orderdata.payment,
+            createdAt: Orderdata.createdAt,
+            updatedAt: Orderdata.updatedAt,
+        };
+        return RoutesHandler.sendSuccess(res, req, responceData, "Order Successfully found");
 
     } catch (error) {
         console.log(error, "Error");
