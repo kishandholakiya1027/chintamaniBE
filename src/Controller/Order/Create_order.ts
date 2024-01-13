@@ -59,8 +59,8 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                     });
 
                     const options = {
-                        amount: cartTotal,
-                        currency: "INR",
+                        amount: cartTotal * 100,
+                        currency: "USD",
                         receipt: "receipt_order_74394",
                     };
                     const order = await instance.orders.create(options);

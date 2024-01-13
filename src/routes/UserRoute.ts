@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { Remove_admin_validator, User_Fetch_validator, User_Update_validator, User_create_validator } from '../Validator/UserValidator';
+import { Remove_admin_validator, User_Fetch_validator, User_Update_validator, User_create_validator, fetch_single_User_Update_validator } from '../Validator/UserValidator';
 import { UserController } from '../Controller/Users/create_user';
 import { AUTH } from '../utils/auth';
 import { Login } from '../Controller/Users/login_user';
@@ -9,6 +9,7 @@ import { Remove_Admin } from '../Controller/Users/Remove_Admin';
 import { Fetch_Active_Admin } from '../Controller/Users/Fetch_Admin';
 import { Update_User } from '../Controller/Users/Update_User_Profile';
 import { Logout_User } from '../Controller/Users/Logout';
+import { Fetch_single_Active_User } from '../Controller/Users/single_user';
 
 const Routes = express.Router();
 const userController = new UserController();
@@ -39,6 +40,8 @@ Routes.patch('/remove/admin/:adminid', Remove_admin_validator, Remove_Admin);
 
 Routes.get('/admin', Fetch_Active_Admin);
 
-Routes.post('/logout', User_Update_validator, Logout_User);
+Routes.post('/logout', AUTH, User_Update_validator, Logout_User);
+
+Routes.get('/fetch_user/:userid', AUTH, fetch_single_User_Update_validator, Fetch_single_Active_User);
 
 export default Routes;

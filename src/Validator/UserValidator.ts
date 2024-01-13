@@ -14,5 +14,9 @@ export const Remove_admin_validator = [
 ];
 
 export const User_Update_validator = [
-  body('userid').notEmpty().withMessage('userid is required').isString()
+  body('userid').notEmpty().withMessage('userid is required').isUUID()
+];
+
+export const fetch_single_User_Update_validator = [
+  param('userid').notEmpty().withMessage('userid is required').isUUID()
 ];
