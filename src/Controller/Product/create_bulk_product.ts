@@ -6,8 +6,6 @@ import { ResponseCodes } from '../../utils/response-codes';
 import { getRepository } from 'typeorm';
 import { SubCategory } from '../../entities/SubCategoryModel';
 import * as XLSX from 'xlsx';
-import * as fs from 'fs';
-
 
 export const Create_bulk_Product = async (req: any, res: Response) => {
     try {
