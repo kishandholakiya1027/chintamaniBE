@@ -19,6 +19,7 @@ export const User_Orders = async (req: any, res: Response, next): Promise<any> =
             .leftJoinAndSelect('order.order_item', 'order_item')
             .leftJoinAndSelect('order.userid', 'userid')
             .where('order.userid = :userid', { userid: userid })
+            .orderBy('order.createdAt', 'DESC')
             .select()
             .skip((page - 1) * pageSize)
             .take(pageSize)

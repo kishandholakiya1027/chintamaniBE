@@ -32,12 +32,12 @@ const sendEmail = async (email: string, otp: string): Promise<void> => {
     };
 
     await transporter.sendMail(mailConfigurations, (error, info) => {
-      if (error) throw new Error(error.message);
+      // if (error) throw new Error(error.message);
       console.log("Email Sent Successfully");
       console.log(info);
     });
   } catch (error) {
-    throw new Error();
+    // throw new Error();
   }
 };
 

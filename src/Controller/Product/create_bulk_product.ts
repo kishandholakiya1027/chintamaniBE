@@ -5,88 +5,102 @@ import { RoutesHandler } from '../../utils/ErrorHandler';
 import { ResponseCodes } from '../../utils/response-codes';
 import { getRepository } from 'typeorm';
 import { SubCategory } from '../../entities/SubCategoryModel';
+import * as XLSX from 'xlsx';
+import * as fs from 'fs';
 
-export const CreateProduct = async (req: any, res: Response) => {
+
+export const Create_bulk_Product = async (req: any, res: Response) => {
     try {
 
-        const { data } = req.body
+        const workbook = XLSX.readFile(req.file.path);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
 
-        for (const element of data) {
+        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, { header: 'A' });
+
+        if (!jsonData && !jsonData.length) {
+            return RoutesHandler.sendError(res, req, 'Data Not Found', ResponseCodes.serverError);
+        }
+        const newJsonData = jsonData.slice(1)
+
+        for (const element of newJsonData) {
 
             try {
 
-                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, sizeimages, colorimage, clarityimage, cutimage } = element
+                const { A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AB, AC, AD, AE, AF, AG, AA } = element
 
                 const ProductRepo = getRepository(Product);
 
                 const FindProduct = await ProductRepo.createQueryBuilder('Product')
-                    .where('Product.maintitle = :maintitle ', { maintitle })
-                    .where('Product.title = :title ', { title })
+                    .where('Product.maintitle = :maintitle', { maintitle: A })
+                    .where('Product.title = :title', { title: B })
                     .getOne();
 
                 let disccount_percentage = null
 
                 if (!FindProduct) {
 
-                    if (price && disccount_price) {
-                        const difference = price - disccount_price;
-                        const percentage = (difference / price) * 100;
+                    if (C && D) {
+                        const difference = C - D;
+                        const percentage = (difference / C) * 100;
                         disccount_percentage = percentage
                     }
 
-                    const newProduct: IProduct = ProductRepo.create({
-                        maintitle: maintitle,
-                        title: title,
-                        price: price,
-                        disccount_price: disccount_price,
+                    const newProduct = ProductRepo.create({
+                        maintitle: A,
+                        title: B,
+                        price: C,
+                        disccount_price: D,
                         disccount_percentage: disccount_percentage ? disccount_percentage : null,
-                        shape: shape,
-                        carat: carat,
-                        colour: colour,
-                        clarity: clarity,
-                        cut: cut,
-                        polish: polish,
-                        symmetry: symmetry,
-                        flourescence: flourescence,
-                        measurements: measurements,
-                        cert_number: cert_number,
-                        table: table,
-                        crown_height: crown_height,
-                        pavilian_depth: pavilian_depth,
-                        depth: depth,
-                        crown_angle: crown_angle,
-                        pavilian_angle: pavilian_angle,
-                        productimage: productimage,
+                        shape: E,
+                        carat: F,
+                        colour: G,
+                        clarity: H,
+                        cut: I,
+                        polish: J,
+                        symmetry: K,
+                        flourescence: L,
+                        measurements: M,
+                        cert_number: N,
+                        table: O,
+                        crown_height: P,
+                        pavilian_depth: Q,
+                        depth: R,
+                        crown_angle: S,
+                        pavilian_angle: T,
+                        productimage: [AC],
                         diamond_size: {
-                            size: size,
-                            size_desc: size_desc,
-                            sizeimages: sizeimages
+                            size: U,
+                            size_desc: V,
+                            sizeimages: AD
                         },
                         diamond_color: {
-                            color_desc: color_desc,
-                            colorimage: colorimage,
+                            color_desc: W,
+                            colorimage: AE,
                         },
                         diamond_clarity: {
-                            clarity_desc: clarity_desc,
-                            clarityimage: clarityimage,
+                            clarity_desc: X,
+                            clarityimage: AF,
                         },
                         diamond_cut: {
-                            cut_desc: cut_desc,
-                            cutimage: cutimage,
+                            cut_desc: Y,
+                            cutimage: AG,
                         },
-                        categoryid: categoryid
+                        categoryid: AB
                     })
 
-                    if (innercategoryid) {
-                        newProduct.innercategoryid = innercategoryid
+                    if (AA) {
+                        newProduct.innercategoryid = AA
                     }
 
-                    if (subcategoryid) {
-                        newProduct.subcategoryid = subcategoryid
+                    if (Z) {
+                        newProduct.subcategoryid = Z
                     }
 
 
-                    await ProductRepo.save(newProduct)
+                    await ProductRepo.save(newProduct).catch((error) => {
+                        console.log(error, "error")
+                    })
 
                 } else {
                     console.log("Product Alredy Exist")

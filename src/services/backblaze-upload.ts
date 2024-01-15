@@ -2,8 +2,8 @@ const B2 = require('backblaze-b2');
 import { Readable } from 'stream';
 const fs = require('fs');
 
-let applicationKeyId: string | undefined = '17bd792484b7' || process.env.B2_APPLICATION_KEY_ID
-let applicationKey: string | undefined = '00533b84474b8df307606a3235e085b54e15bc7e9b' || process.env.B2_APPLICATION_KEY
+let applicationKeyId: string | undefined = 'd07ca89b86a6' || process.env.B2_APPLICATION_KEY_ID
+let applicationKey: string | undefined = '0057c3703feb6097b2a6ca1583e4a38223a6c8427d' || process.env.B2_APPLICATION_KEY
 
 const b2 = new B2({
     applicationKeyId: applicationKeyId,
@@ -45,7 +45,7 @@ export class FileService {
             try {
                 await b2.authorize();
                 const data = await b2.getUploadUrl({
-                    bucketId: 'a137cb7de7e9a2f488c40b17'
+                    bucketId: '3d60d7fcca58092b88d60a16'
                 })
 
                 const readDataData = await this.streamToBuffer(fs.createReadStream(file));
@@ -58,7 +58,7 @@ export class FileService {
                     data: readDataData,
                     contentLength: 1000000000
                 });
-                resolve({ fileName: `https://chintamanigems.s3.us-east-005.backblazeb2.com/${response.data.fileName}`, fileId: response?.data?.fileId })
+                resolve({ fileName: `https://GemsBucket.s3.us-east-005.backblazeb2.com/${response.data.fileName}`, fileId: response?.data?.fileId })
             }
             catch (error: any) {
                 console.log("error = " + error)
@@ -72,7 +72,7 @@ export class FileService {
             try {
                 await b2.authorize();
                 const data = await b2.getUploadUrl({
-                    bucketId: 'a137cb7de7e9a2f488c40b17'
+                    bucketId: '3d60d7fcca58092b88d60a16'
                 })
                 // const readData = fs.readFileSync(file['image'][0]);
                 let base64Image = file?.split(";base64,");
@@ -87,7 +87,7 @@ export class FileService {
                     data: readData,
                     contentLength: 1000000000
                 });
-                resolve({ fileName: `https://chintamanigems.s3.us-east-005.backblazeb2.com/${response.data.fileName}`, fileId: response?.data?.fileId })
+                resolve({ fileName: `https://GemsBucket.s3.us-east-005.backblazeb2.com/${response.data.fileName}`, fileId: response?.data?.fileId })
             }
             catch (error: any) {
                 console.log("error = " + error)

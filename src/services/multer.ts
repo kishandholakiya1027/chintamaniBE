@@ -18,6 +18,8 @@ const storage = multer.diskStorage({
 
 export const upload = multer({ storage: storage }).single("image");
 
+export const insert_product = multer({ storage: storage }).single("product_exel");
+
 export const Productmultiplefile = multer({
   storage: storage,
 }).fields([

@@ -31,11 +31,12 @@
     "razorpay": "^2.9.2",
     "reflect-metadata": "^0.2.1",
     "shortid": "^2.2.16",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.10.5",
+    "@types/node": "^20.11.1",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "eslint": "^8.56.0",
