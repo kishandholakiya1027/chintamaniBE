@@ -9,6 +9,7 @@ export const getAllOrders = async (req: any, res: Response, next): Promise<any> 
   try {
 
     const orderstatus = req.query.orderstatus
+    const paymentstatus = req.query.payment
 
     const orderRepository = getRepository(Order);
 
@@ -22,7 +23,11 @@ export const getAllOrders = async (req: any, res: Response, next): Promise<any> 
       .take(pageSize)
 
     if (orderstatus) {
-      orders.where('order.orderstatus = :orderstatus ', { orderstatus: Number(orderstatus) })
+      orders.where('order.orderstatus = :orderstatus', { orderstatus: Number(orderstatus) })
+    }
+
+    if (paymentstatus) {
+      orders.where('order.payment = :payment', { payment: Number(paymentstatus) })
     }
 
     const [Orderdata, total] = await orders.getManyAndCount()
