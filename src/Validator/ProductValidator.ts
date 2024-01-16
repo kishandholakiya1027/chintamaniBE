@@ -22,3 +22,11 @@ export const update_product_validator = [
 export const delete_product_validator = [
     param('productId').notEmpty().withMessage('Product Id Is required'),
 ];
+
+export const fetch_trending_diamonds_product_create_validator = [
+    query('categoryid').optional(),
+    query('shape').optional(),
+    query('Clarity').optional(),
+    query('Color').optional(),
+    query('Cuts').optional()
+];
