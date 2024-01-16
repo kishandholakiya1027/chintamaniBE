@@ -3,8 +3,8 @@ import { body, param, query } from "express-validator";
 export const product_create_validator = [
     body('maintitle').notEmpty().withMessage('maintitle is required').isString(),
     body('title').notEmpty().withMessage('title is required').isString(),
-    body('price').notEmpty().withMessage('Price is required').isString(),
-    body('categoryid').notEmpty().withMessage('subcategory id is required')
+    body('price').notEmpty().withMessage('Price is required').isNumeric(),
+    body('categoryid').notEmpty().withMessage('subcategory id is required').isUUID()
 ];
 
 export const fetch_product_create_validator = [

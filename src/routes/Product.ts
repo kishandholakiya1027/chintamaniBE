@@ -10,7 +10,7 @@ import { Trading_Product } from '../Controller/Product/Trending_Product';
 const Routes = express.Router();
 const ProductControllers = new ProductController();
 
-Routes.post('/create', AUTH, Productmultiplefile, ProductControllers.CreateProduct);
+Routes.post('/create', AUTH, Productmultiplefile, product_create_validator, ProductControllers.CreateProduct);
 
 Routes.post('/create/bulk_product', AUTH, insert_product, Create_bulk_Product);
 
