@@ -6,6 +6,7 @@ import { AUTH } from '../utils/auth';
 import { Fetch_single_Orders } from '../Controller/Order/fetch_single_order';
 import { Update_Order_status } from '../Controller/Order/Update_Order_status';
 import { User_Orders } from '../Controller/Order/User_fetch_Order';
+import { Update_Order_Payment } from '../Controller/Order/update_payment_order';
 const Routes = express.Router();
 
 Routes.post('/create', AUTH, order_create_validator, Cteate_Order);
@@ -17,5 +18,7 @@ Routes.get('/single/:orderid', AUTH, single_order_validator, Fetch_single_Orders
 Routes.patch('/update', AUTH, update_single_order_validator, Update_Order_status);
 
 Routes.get('/user_order/:userid', AUTH, User_single_order_validator, User_Orders);
+
+Routes.patch('/update_order', AUTH, update_single_order_validator, Update_Order_Payment);
 
 export default Routes;

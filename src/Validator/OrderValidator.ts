@@ -6,7 +6,7 @@ export const order_create_validator = [
 
 export const order_fetch_validator = [
     query('orderstatus').optional(),
-];
+    ];
 
 export const single_order_validator = [
     param('orderid').notEmpty().withMessage('orderid is required')
