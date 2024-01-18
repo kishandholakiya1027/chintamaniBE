@@ -18,7 +18,7 @@ export class ProductController {
 
                 const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid } = req.body
 
-                if (!maintitle || !title || !price || !categoryid) {
+                if (!maintitle || !title || !price || !categoryid || !req.files.sizeimages || !req.files.colorimage || !req.files.clarityimage || !req.files.cutimage || !req.files.productimage || !shape || !carat || !colour || !clarity || !cut || !polish || !symmetry || !flourescence || !measurements || !cert_number || !table || !crown_height || !pavilian_depth || !depth || !crown_angle || !pavilian_angle || !size || !size_desc || !color_desc || !clarity_desc || !cut_desc) {
                     return RoutesHandler.sendError(res, req, "All Filed Required", ResponseCodes.inputError);
                 }
 
@@ -358,7 +358,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { productId } = req.param;
+                const productId = req.params.productId;
 
                 const productRepo = getRepository(Product);
 

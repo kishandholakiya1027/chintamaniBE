@@ -16,7 +16,7 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
             }
 
-            const { userid, totalprice, orderNote, deliveredAt, products = [] } = req.body;
+            const { userid, totalprice, Address, mobile, deliveredAt, products = [] } = req.body;
 
             const OrderRepo = getRepository(Order);
             const CartRepo = getRepository(Cart);
@@ -67,12 +67,20 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
 
                     let productids = existingCart.products_id.map((item) => item)
 
+                    var today = new Date();
+                    var numberOfDaysToAdd = 10;
+                    var tenDaysPlus = today.setDate(today.getDate() + numberOfDaysToAdd)
+
                     const NewOrder = await OrderRepo.save((await OrderRepo.create({
                         quantity: quantity.map(item => item.quantity),
                         userid: userid,
                         totalprice: totalprice,
                         order_item: productids,
                         orderDetails: order,
+                        mobile: mobile,
+                        Address: Address,
+                        deliveredAt: today
+
                     })));
                     await CartRepo.remove(existingCart);
 
@@ -88,6 +96,8 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
                         totalprice: existingCart.userid,
                         products: productResponse,
                         orderDetails: NewOrder.orderDetails,
+                        Address: NewOrder.Address,
+                        mobile: NewOrder.mobile,
                         orderstatus: NewOrder.orderstatus,
                         orderNote: NewOrder.orderNote,
                         deliveredAt: NewOrder.deliveredAt,

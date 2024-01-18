@@ -31,7 +31,7 @@ export class Order {
     @JoinTable({ name: 'order_item' })
     order_item: Product[];
 
-    @Column({ type: 'simple-array', default: [] }) 
+    @Column({ type: 'simple-array', default: [] })
     quantity: number[];
 
     @Column({ type: 'bigint', nullable: true })
@@ -48,6 +48,9 @@ export class Order {
 
     @Column({ nullable: true })
     Address: string;
+
+    @Column({ nullable: true })
+    mobile: string;
 
     @Column({ nullable: true, default: payment_Status.Pendding })
     payment: number;
