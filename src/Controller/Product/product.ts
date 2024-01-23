@@ -24,6 +24,7 @@ export class ProductController {
 
                 const ProductRepo = getRepository(Product);
                 let sizeimages
+                let diamond_certificate
                 let colorimage
                 let clarityimage
                 let cutimage
@@ -32,6 +33,11 @@ export class ProductController {
                 if (req.files.sizeimages) {
                     const sizeimagesPath = req.files.sizeimages.map((item: any) => item.path)
                     sizeimages = await fileService.uploadFileInS3("size", sizeimagesPath)
+                }
+
+                if (req?.files?.diamond_certificate) {
+                    const diamond_certificateimagesPath = req.files.diamond_certificate.map((item: any) => item.path)
+                    diamond_certificate = await fileService.uploadFileInS3("diamond_certificate", diamond_certificateimagesPath)
                 }
 
                 if (req.files.colorimage) {
@@ -93,22 +99,23 @@ export class ProductController {
                         crown_angle: crown_angle,
                         pavilian_angle: pavilian_angle,
                         productimage: productimage,
+                        diamond_certificate: diamond_certificate ? diamond_certificate[0]?.fileName : null,
                         diamond_size: {
                             size: size,
                             size_desc: size_desc,
-                            sizeimages: sizeimages[0]?.fileName
+                            sizeimages: sizeimages ? sizeimages[0]?.fileName : null
                         },
                         diamond_color: {
                             color_desc: color_desc,
-                            colorimage: colorimage[0]?.fileName,
+                            colorimage: colorimage ? colorimage[0]?.fileName : null,
                         },
                         diamond_clarity: {
                             clarity_desc: clarity_desc,
-                            clarityimage: clarityimage[0]?.fileName,
+                            clarityimage: clarityimage ? clarityimage[0]?.fileName : null,
                         },
                         diamond_cut: {
                             cut_desc: cut_desc,
-                            cutimage: cutimage[0]?.fileName,
+                            cutimage: cutimage ? cutimage[0]?.fileName : null,
                         },
                         categoryid: categoryid
                     })
@@ -279,7 +286,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage } = req.body
+                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate } = req.body
 
                 const productRepo = getRepository(Product);
 
@@ -318,6 +325,7 @@ export class ProductController {
                 existingProduct.crown_angle = crown_angle || existingProduct.crown_angle;
                 existingProduct.pavilian_angle = pavilian_angle || existingProduct.pavilian_angle;
                 existingProduct.productimage = productimage || existingProduct.productimage;
+                existingProduct.diamond_certificate = diamond_certificate || existingProduct.diamond_certificate;
                 existingProduct.status = Number(status) || existingProduct.status;
                 existingProduct.diamond_size.size = size || existingProduct.diamond_size.size;
                 existingProduct.diamond_size.size_desc = size_desc || existingProduct.diamond_size.size_desc;

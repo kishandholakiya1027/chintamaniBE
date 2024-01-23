@@ -74,6 +74,9 @@ export class Product {
     @Column({ nullable: true })
     pavilian_angle: string;
 
+    @Column({ nullable: true })
+    diamond_certificate: string;
+
     @Column({ nullable: true, default: null })
     disccount_percentage: string;
 
