@@ -23,7 +23,7 @@ export class Product {
     @Column({ nullable: true })
     price: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: null })
     disccount_price: string;
 
     @Column({ nullable: true })
