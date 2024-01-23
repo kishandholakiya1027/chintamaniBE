@@ -45,6 +45,8 @@ export const getAllOrders = async (req: any, res: Response, next): Promise<any> 
       orderNote: order.orderNote,
       deliveredAt: order.deliveredAt,
       payment: order.payment,
+      Address: order.Address,
+      mobile: order.mobile,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt,
       productResponse: order.order_item.map((item, index) => ({
