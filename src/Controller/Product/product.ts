@@ -18,7 +18,7 @@ export class ProductController {
 
                 const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid } = req.body
 
-                if (!maintitle || !title || !price || !categoryid || !req.files.sizeimages || !req.files.colorimage || !req.files.clarityimage || !req.files.cutimage || !req.files.productimage || !shape || !carat || !colour || !clarity || !cut || !polish || !symmetry || !flourescence || !measurements || !cert_number || !table || !crown_height || !pavilian_depth || !depth || !crown_angle || !pavilian_angle || !size || !size_desc || !color_desc || !clarity_desc || !cut_desc) {
+                if (!maintitle || !title || !price || !categoryid) {
                     return RoutesHandler.sendError(res, req, "All Filed Required", ResponseCodes.inputError);
                 }
 
@@ -64,7 +64,7 @@ export class ProductController {
 
                 if (!FindProduct) {
 
-                    if (price && disccount_price) {
+                    if (price && disccount_price && disccount_price !== "0") {
                         const difference = price - disccount_price;
                         const percentage = (difference / price) * 100;
                         disccount_percentage = percentage
@@ -74,7 +74,7 @@ export class ProductController {
                         maintitle: maintitle,
                         title: title,
                         price: price,
-                        disccount_price: disccount_price,
+                        disccount_price: disccount_price ? disccount_price : null,
                         disccount_percentage: disccount_percentage ? disccount_percentage : null,
                         shape: shape,
                         carat: carat,
