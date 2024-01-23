@@ -83,6 +83,9 @@ export class Product {
     @Column("text", { array: true, nullable: true })
     productimage: string[];
 
+    @Column({ default: false }) 
+    customized: boolean
+
     @Column({
         type: 'enum',
         enum: ProductStatus,

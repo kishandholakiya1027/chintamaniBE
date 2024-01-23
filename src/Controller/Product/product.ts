@@ -16,7 +16,7 @@ export class ProductController {
         return new Promise(async (resolve, reject) => {
             try {
 
-                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid } = req.body
+                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, customized } = req.body
 
                 if (!maintitle || !title || !price || !categoryid) {
                     return RoutesHandler.sendError(res, req, "All Filed Required", ResponseCodes.inputError);
@@ -100,6 +100,7 @@ export class ProductController {
                         pavilian_angle: pavilian_angle,
                         productimage: productimage,
                         diamond_certificate: diamond_certificate ? diamond_certificate[0]?.fileName : null,
+                        customized: customized,
                         diamond_size: {
                             size: size,
                             size_desc: size_desc,
@@ -286,7 +287,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate } = req.body
+                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate, customized } = req.body
 
                 const productRepo = getRepository(Product);
 
@@ -326,6 +327,7 @@ export class ProductController {
                 existingProduct.pavilian_angle = pavilian_angle || existingProduct.pavilian_angle;
                 existingProduct.productimage = productimage || existingProduct.productimage;
                 existingProduct.diamond_certificate = diamond_certificate || existingProduct.diamond_certificate;
+                existingProduct.customized = customized || existingProduct.customized;
                 existingProduct.status = Number(status) || existingProduct.status;
                 existingProduct.diamond_size.size = size || existingProduct.diamond_size.size;
                 existingProduct.diamond_size.size_desc = size_desc || existingProduct.diamond_size.size_desc;
