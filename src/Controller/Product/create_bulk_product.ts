@@ -34,14 +34,14 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
 
                     const ProductRepo = getRepository(Product);
 
-                    const FindProduct = await ProductRepo.createQueryBuilder('Product')
-                        .where('Product.maintitle = :maintitle', { maintitle: A })
-                        .where('Product.title = :title', { title: B })
-                        .getOne();
+                    // const FindProduct = await ProductRepo.createQueryBuilder('Product')
+                    //     .where('Product.maintitle = :maintitle', { maintitle: A })
+                    //     .where('Product.title = :title', { title: B })
+                    //     .getOne();
 
                     let disccount_percentage = null
 
-                    if (!FindProduct) {
+                    // if (!FindProduct) {
 
                         if (C && D) {
                             const difference = C - D;
@@ -116,9 +116,9 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
                             console.log(error, "error")
                         })
 
-                    } else {
-                        console.log("Product Alredy Exist")
-                    }
+                    // } else {
+                    //     console.log("Product Alredy Exist")
+                    // }
 
                 } catch (error) {
                     console.log(error, "Error")

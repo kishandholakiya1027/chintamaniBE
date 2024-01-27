@@ -28,4 +28,5 @@ export const Productmultiplefile = multer({
   { name: 'clarityimage', maxCount: 1 },
   { name: 'cutimage', maxCount: 1 },
   { name: 'diamond_certificate', maxCount: 1 },
+  { name: 'productvideo', maxCount: 1 },
   { name: 'productimage', maxCount: 4 }])
