@@ -146,6 +146,9 @@ export class Product {
     @Column({ nullable: true })
     diamond_certificate: string;
 
+    @Column({ nullable: true })
+    productvideo: string;
+
     @Column({ nullable: true, default: null })
     disccount_percentage: string;
 

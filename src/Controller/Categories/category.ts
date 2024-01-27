@@ -148,6 +148,7 @@ export class CategoryController {
             name: category.name,
             description: category.description,
             image: category.image,
+            status: category.status,
             createdAt: category.createdAt,
             updatedAt: category.updatedAt,
           });
@@ -256,7 +257,7 @@ export class CategoryController {
       try {
         const id = req.params.id;
 
-        const { name, description, image } = req.body;
+        const { name, description, image, status } = req.body;
 
         const categoryRepo = getRepository(Category);
 
@@ -273,6 +274,7 @@ export class CategoryController {
 
         categoryToUpdate.name = name || categoryToUpdate.name;
         categoryToUpdate.description = description || categoryToUpdate.description;
+        categoryToUpdate.status = status || categoryToUpdate.status;
         categoryToUpdate.image = image || categoryToUpdate.image;
 
         const UpdateCategory = await categoryRepo.save(categoryToUpdate);

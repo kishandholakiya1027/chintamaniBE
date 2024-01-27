@@ -28,6 +28,7 @@ export class ProductController {
                 let colorimage
                 let clarityimage
                 let cutimage
+                let productvideo
                 let productimage = []
 
                 if (req.files.sizeimages) {
@@ -59,6 +60,11 @@ export class ProductController {
                     const productimagePath = req.files.productimage.map((item: any) => item.path)
                     let productimageUrl = await fileService.uploadFileInS3("product", productimagePath)
                     productimage = productimageUrl.map((item: any) => item.fileName)
+                }
+
+                if (req.files.productvideo) {
+                    const productvideoPath = req.files.productvideo.map((item: any) => item.path)
+                    productvideo = await fileService.uploadFileInS3("productvideo", productvideoPath)
                 }
 
                 const FindProduct = await ProductRepo.createQueryBuilder('Product')
@@ -99,6 +105,7 @@ export class ProductController {
                         crown_angle: crown_angle,
                         pavilian_angle: pavilian_angle,
                         productimage: productimage,
+                        productvideo: productvideo ?  productvideo[0]?.fileName : null,
                         diamond_certificate: diamond_certificate ? diamond_certificate[0]?.fileName : null,
                         customized: customized,
                         diamond_size: {

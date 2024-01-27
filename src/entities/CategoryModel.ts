@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
 
 export enum CategoryStatus {
-  ACTIVE,
   INACTIVE,
+  ACTIVE,
 }
 
 @Entity()

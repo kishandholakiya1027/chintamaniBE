@@ -80,7 +80,8 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
                             depth: M,
                             crown_angle: S,
                             pavilian_angle: T,
-                            productimage: [U],
+                            productimage: [],
+                            productvideo: U,
                             diamond_certificate: R,
                             diamond_size: {
                                 size: E,
@@ -157,65 +158,66 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
 
                     // if (!FindProduct) {
 
-                        const newProduct = ProductRepo.create({
-                            srno: A,
-                            location: B,
-                            stock: C,
-                            report_date: AM,
-                            report: Y,
-                            laser_inscription: AL,
-                            lab: Z,
-                            girdle: AA,
-                            girdle_con: AB,
-                            girdle_per: AC,
-                            culet: AD,
-                            maintitle: AK,
-                            title: AK,
-                            price: P,
-                            rap: M,
-                            rap_disccount: N,
-                            per_ct: O,
-                            disccount_price: null,
-                            disccount_percentage: null,
-                            shape: D,
-                            carat: F,
-                            colour: F,
-                            clarity: G,
-                            cut: H,
-                            polish: I,
-                            symmetry: J,
-                            flourescence: K,
-                            flourescence_Color: L,
-                            measurements: S,
-                            table_inclusion: T,
-                            side_inclusion: U,
-                            feather_inclusion: V,
-                            tinge: W,
-                            eyeclean: X,
-                            cert_number: N,
-                            table: R,
-                            crown_height: AF,
-                            pavilian_depth: AH,
-                            depth: Q,
-                            crown_angle: AE,
-                            pavilian_angle: AG,
-                            star_length: AI,
-                            lower: AJ,
-                            productimage: [AN],
-                            diamond_size: {
-                                size: E,
-                            },
-                            categoryid: categoryid
-                        })
+                    const newProduct = ProductRepo.create({
+                        srno: A,
+                        location: B,
+                        stock: C,
+                        report_date: AM,
+                        report: Y,
+                        laser_inscription: AL,
+                        lab: Z,
+                        girdle: AA,
+                        girdle_con: AB,
+                        girdle_per: AC,
+                        culet: AD,
+                        maintitle: AK,
+                        title: AK,
+                        price: P,
+                        rap: M,
+                        rap_disccount: N,
+                        per_ct: O,
+                        disccount_price: null,
+                        disccount_percentage: null,
+                        shape: D,
+                        carat: F,
+                        colour: F,
+                        clarity: G,
+                        cut: H,
+                        polish: I,
+                        symmetry: J,
+                        flourescence: K,
+                        flourescence_Color: L,
+                        measurements: S,
+                        table_inclusion: T,
+                        side_inclusion: U,
+                        feather_inclusion: V,
+                        tinge: W,
+                        eyeclean: X,
+                        cert_number: N,
+                        table: R,
+                        crown_height: AF,
+                        pavilian_depth: AH,
+                        depth: Q,
+                        crown_angle: AE,
+                        pavilian_angle: AG,
+                        star_length: AI,
+                        lower: AJ,
+                        productimage: [],
+                        productvideo: AN,
+                        diamond_size: {
+                            size: E,
+                        },
+                        categoryid: categoryid
+                    })
 
-                        if (Z) {
-                            newProduct.subcategoryid = subcategoryid
-                        }
+                    if (Z) {
+                        newProduct.subcategoryid = subcategoryid
+                    }
 
 
-                        await ProductRepo.save(newProduct).catch((error) => {
-                            console.log(error, "error")
-                        })
+                    await ProductRepo.save(newProduct).catch((error) => {
+                        console.log(error, "error")
+                    })
 
                     // } else {
                     //     console.log("Product Alredy Exist")
@@ -226,6 +228,7 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
                 }
             }
         }
+
         return RoutesHandler.sendSuccess(res, req, null, "Product Successfully Created")
 
     } catch (error) {

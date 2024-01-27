@@ -10,8 +10,8 @@ import {
 import { Category } from './CategoryModel';
 
 export enum SubCategoryStatus {
-  ACTIVE,
   INACTIVE,
+  ACTIVE,
 }
 
 @Entity()

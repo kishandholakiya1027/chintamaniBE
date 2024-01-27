@@ -154,6 +154,7 @@ export class SubCategoryController {
           name: subCategory.name,
           description: subCategory.description,
           image: subCategory.image,
+          status: subCategory.status,
           createdAt: subCategory.createdAt,
           updatedAt: subCategory.updatedAt,
           category: subCategory.categoryid.id,
@@ -184,6 +185,7 @@ export class SubCategoryController {
             'id',
             'name',
             'image',
+            'status',
             'description',
             'createdAt',
             'updatedAt',
@@ -216,7 +218,7 @@ export class SubCategoryController {
     return new Promise(async (resolve, reject) => {
       try {
         const id = req.params.id;
-        const { name, categoryid, description, image } = req.body;
+        const { name, categoryid, description, image, status } = req.body;
 
         const subCategoryRepo = getRepository(SubCategory);
 
@@ -241,6 +243,7 @@ export class SubCategoryController {
             categoryid,
             description,
             image: image,
+            status
           }
         );
         return res.status(ResponseCodes.success).json({

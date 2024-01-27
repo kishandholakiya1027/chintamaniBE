@@ -119,6 +119,7 @@ export class InnerCategoryController {
             name: innerCategory.name,
             description: innerCategory.description,
             image: innerCategory.image,
+            status: innerCategory.status,
             createdAt: innerCategory.createdAt,
             updatedAt: innerCategory.updatedAt,
             subCategory: innerCategory.subcategoryid.id,
@@ -151,6 +152,7 @@ export class InnerCategoryController {
             'id',
             'name',
             'image',
+            'status',
             'description',
             'createdAt',
             'updatedAt',
@@ -185,7 +187,7 @@ export class InnerCategoryController {
       try {
         const id = req.params.id;
 
-        const { name, subcategoryid, description, image } = req.body;
+        const { name, subcategoryid, description, image, status } = req.body;
 
         const InnerCategoryRepo = getRepository(InnerCategory);
 
@@ -219,6 +221,7 @@ export class InnerCategoryController {
             name,
             subcategoryid,
             description,
+            status,
             image: image,
           }
         );
