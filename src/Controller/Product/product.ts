@@ -16,7 +16,7 @@ export class ProductController {
         return new Promise(async (resolve, reject) => {
             try {
 
-                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, customized } = req.body
+                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, customized, srno,location,stock,stone,rap,rap_disccount,per_ct,flourescence_Color,table_inclusion,side_inclusion,feather_inclusion,tinge,eyeclean,girdle,girdle_con,girdle_per,culet,report,report_date,laser_inscription,lab,star_length,lower } = req.body
 
                 if (!maintitle || !title || !price || !categoryid) {
                     return RoutesHandler.sendError(res, req, "All Filed Required", ResponseCodes.inputError);
@@ -83,9 +83,16 @@ export class ProductController {
                     }
 
                     const newProduct: IProduct = ProductRepo.create({
+                        srno: srno,
+                        location: location,
+                        stock: stock,
+                        stone: stone,                         
                         maintitle: maintitle,
                         title: title,
                         price: price,
+                        rap: rap,
+                        rap_disccount: rap_disccount,
+                        per_ct : per_ct,
                         disccount_price: disccount_price ? disccount_price : null,
                         disccount_percentage: disccount_percentage ? disccount_percentage : null,
                         shape: shape,
@@ -96,14 +103,30 @@ export class ProductController {
                         polish: polish,
                         symmetry: symmetry,
                         flourescence: flourescence,
+                        flourescence_Color : flourescence_Color,
                         measurements: measurements,
                         cert_number: cert_number,
                         table: table,
+                        table_inclusion: table_inclusion,
+                        side_inclusion: side_inclusion,
+                        feather_inclusion : feather_inclusion,
+                        tinge: tinge,
+                        eyeclean: eyeclean,
+                        girdle : girdle,
+                        girdle_con : girdle_con,
+                        girdle_per: girdle_per,
+                        culet : culet, 
                         crown_height: crown_height,
                         pavilian_depth: pavilian_depth,
                         depth: depth,
                         crown_angle: crown_angle,
                         pavilian_angle: pavilian_angle,
+                        report: report,
+                        report_date: report_date,
+                        laser_inscription : laser_inscription,
+                        lab: lab,
+                        star_length : star_length,
+                        lower: lower,
                         productimage: productimage,
                         productvideo: productvideo ?  productvideo[0]?.fileName : null,
                         diamond_certificate: diamond_certificate ? diamond_certificate[0]?.fileName : null,
@@ -245,6 +268,8 @@ export class ProductController {
 
                 const [product, total] = await qurey.getManyAndCount()
 
+                console.log(product,"Product")
+
                 if (!product || product.length === 0) {
                     return RoutesHandler.sendError(res, req, 'Product Not Found', ResponseCodes.success);
                 }
@@ -294,7 +319,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate, customized } = req.body
+                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate, customized, srno,location,stock,stone,rap,rap_disccount,per_ct,flourescence_Color,table_inclusion,side_inclusion,feather_inclusion,tinge,eyeclean,girdle,girdle_con,girdle_per,culet,report,report_date,laser_inscription,lab,star_length,lower, productvideo } = req.body
 
                 const productRepo = getRepository(Product);
 
@@ -312,6 +337,29 @@ export class ProductController {
                 }
 
                 existingProduct.title = title || existingProduct.title;
+                existingProduct.srno = srno || existingProduct.srno;
+                existingProduct.location = location || existingProduct.location;
+                existingProduct.stock = stock || existingProduct.stock;
+                existingProduct.stone = stone || existingProduct.stone;
+                existingProduct.rap = rap || existingProduct.rap;
+                existingProduct.rap_disccount = rap_disccount || existingProduct.rap_disccount;
+                existingProduct.per_ct = per_ct || existingProduct.per_ct;
+                existingProduct.flourescence_Color = flourescence_Color || existingProduct.flourescence_Color;
+                existingProduct.table_inclusion = table_inclusion || existingProduct.table_inclusion;
+                existingProduct.side_inclusion = side_inclusion || existingProduct.side_inclusion;
+                existingProduct.feather_inclusion = feather_inclusion || existingProduct.feather_inclusion;
+                existingProduct.eyeclean = eyeclean || existingProduct.eyeclean;
+                existingProduct.girdle = girdle || existingProduct.girdle;
+                existingProduct.tinge = tinge || existingProduct.tinge;
+                existingProduct.girdle_con = girdle_con || existingProduct.girdle_con;
+                existingProduct.girdle_per = girdle_per || existingProduct.girdle_per;
+                existingProduct.report = report || existingProduct.report;
+                existingProduct.culet = culet || existingProduct.culet;
+                existingProduct.report_date = report_date || existingProduct.report_date;
+                existingProduct.laser_inscription = laser_inscription || existingProduct.laser_inscription;
+                existingProduct.lab = lab || existingProduct.lab;
+                existingProduct.star_length = star_length || existingProduct.star_length;
+                existingProduct.lower = lower || existingProduct.lower;
                 existingProduct.maintitle = maintitle || existingProduct.maintitle;
                 existingProduct.price = price || existingProduct.price;
                 existingProduct.disccount_price = disccount_price || existingProduct.disccount_price;
@@ -333,6 +381,7 @@ export class ProductController {
                 existingProduct.crown_angle = crown_angle || existingProduct.crown_angle;
                 existingProduct.pavilian_angle = pavilian_angle || existingProduct.pavilian_angle;
                 existingProduct.productimage = productimage || existingProduct.productimage;
+                existingProduct.productvideo = productvideo || existingProduct.productvideo;
                 existingProduct.diamond_certificate = diamond_certificate || existingProduct.diamond_certificate;
                 existingProduct.customized = customized || existingProduct.customized;
                 existingProduct.status = Number(status) || existingProduct.status;
