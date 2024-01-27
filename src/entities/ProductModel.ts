@@ -15,6 +15,18 @@ export class Product {
     id: number;
 
     @Column({ nullable: true })
+    srno: string;
+
+    @Column({ nullable: true })
+    location: string;
+
+    @Column({ nullable: true })
+    stock: string;
+
+    @Column({ nullable: true })
+    stone: string;
+
+    @Column({ nullable: true })
     title: string;
 
     @Column({ nullable: true })
@@ -22,6 +34,15 @@ export class Product {
 
     @Column({ nullable: true })
     price: string;
+
+    @Column({ nullable: true })
+    rap: string;
+
+    @Column({ nullable: true })
+    rap_disccount: string;
+
+    @Column({ nullable: true })
+    per_ct: string;
 
     @Column({ nullable: true, default: null })
     disccount_price: string;
@@ -51,6 +72,9 @@ export class Product {
     flourescence: string;
 
     @Column({ nullable: true })
+    flourescence_Color: string;
+
+    @Column({ nullable: true })
     measurements: string;
 
     @Column({ nullable: true })
@@ -60,6 +84,33 @@ export class Product {
     table: string;
 
     @Column({ nullable: true })
+    table_inclusion: string;
+
+    @Column({ nullable: true })
+    side_inclusion: string;
+
+    @Column({ nullable: true })
+    feather_inclusion : string;
+
+    @Column({ nullable: true })
+    tinge: string;
+
+    @Column({ nullable: true })
+    eyeclean : string;
+
+    @Column({ nullable: true })
+    girdle : string;
+
+    @Column({ nullable: true })
+    girdle_con : string;
+
+    @Column({ nullable: true })
+    girdle_per : string;
+
+    @Column({ nullable: true })
+    culet : string;
+
+    @Column({ nullable: true })
     crown_height: string;
 
     @Column({ nullable: true })
@@ -67,6 +118,24 @@ export class Product {
 
     @Column({ nullable: true })
     depth: string;
+
+    @Column({ nullable: true })
+    report: string;
+
+    @Column({ nullable: true })
+    report_date: string;
+
+    @Column({ nullable: true })
+    laser_inscription: string;
+
+    @Column({ nullable: true })
+    lab: string;
+
+    @Column({ nullable: true })
+    star_length: string;
+
+    @Column({ nullable: true })
+    lower : string;
 
     @Column({ nullable: true })
     crown_angle: string;
