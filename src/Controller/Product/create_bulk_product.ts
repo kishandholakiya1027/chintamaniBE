@@ -43,11 +43,12 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
 
                     // if (!FindProduct) {
 
-                        if (C && D) {
-                            const difference = C - D;
-                            const percentage = (difference / C) * 100;
-                            disccount_percentage = percentage
-                        }
+                        // if (C && D) {
+                        //     const difference = C - D;
+                        //     const percentage = (difference / C) * 100;
+                        //     disccount_percentage = percentage
+                        // }
+
                         const category: any = 'e62ba09e-761d-447f-a447-fcbb5cb7e063'
                         const subcategory: any = '2afbb514-4c4e-4604-bcbd-72b7991d2a79'
                         const innnercategory: any = 'c217e766-6180-4181-8cef-1873754aa73d'
@@ -62,7 +63,7 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
                             maintitle: S,
                             title: S,
                             price: L,
-                            disccount_price: D,
+                            disccount_price: null,
                             disccount_percentage: disccount_percentage ? disccount_percentage : null,
                             shape: D,
                             carat: F,
@@ -100,17 +101,11 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
                                 cut_desc: Y,
                                 cutimage: AG,
                             },
-                            categoryid: category
+                            categoryid: category,
+                            subcategoryid: subcategory,
+                            innercategoryid: innnercategory,
+
                         })
-
-                        if (AA) {
-                            newProduct.innercategoryid = innnercategory
-                        }
-
-                        if (Z) {
-                            newProduct.subcategoryid = subcategory
-                        }
-
 
                         await ProductRepo.save(newProduct).catch((error) => {
                             console.log(error, "error")
@@ -144,7 +139,7 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
 
                 try {
 
-                    const { A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AB, AC, AD, AE, AF, AG, AA, AH, AK, AI, AJ, AL, AM, AN } = element
+                    const { A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, AB, AC, AD, AE, AF, AG, AA, AH, AK, AI, AJ, AL, AM, AN, AO } = element
 
                     const ProductRepo = getRepository(Product);
                     const categoryid: any = 'e62ba09e-761d-447f-a447-fcbb5cb7e063'
@@ -202,7 +197,7 @@ export const Create_bulk_Product = async (req: any, res: Response) => {
                         pavilian_angle: AG,
                         star_length: AI,
                         lower: AJ,
-                        productimage: [],
+                        productimage: [AO],
                         productvideo: AN,
                         diamond_size: {
                             size: E,

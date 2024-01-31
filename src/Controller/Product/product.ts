@@ -211,15 +211,15 @@ export class ProductController {
                 }
 
                 if (subcategoryid) {
-                    qurey.andWhere('Product.subcategoryid = :subcategoryid ', { subcategoryid: subcategoryid })
+                    qurey.where('Product.subcategoryid = :subcategoryid ', { subcategoryid: subcategoryid })
                 }
                 if (innnercategoryid) {
-                    qurey.andWhere('Product.innnercategoryid = :innnercategoryid ', { innercategoryid: innnercategoryid })
+                    qurey.where('Product.innnercategoryid = :innnercategoryid ', { innercategoryid: innnercategoryid })
 
                 }
                 if (minPrice && maxPrice) {
                     qurey.where('Product.price >= :minPrice', { minPrice: minPrice })
-                    qurey.andWhere('Product.price <= :maxPrice', { maxPrice: maxPrice })
+                    qurey.where('Product.price <= :maxPrice', { maxPrice: maxPrice })
                 }
 
                 if (Number(sort) === 1) {
@@ -236,20 +236,20 @@ export class ProductController {
 
                 if (mincarat && maxcarat) {
                     qurey.where('Product.carat >= :minCarat', { minCarat: mincarat })
-                    qurey.andWhere('Product.carat <= :maxCarat', { maxCarat: maxcarat })
+                    qurey.where('Product.carat <= :maxCarat', { maxCarat: maxcarat })
                     qurey.orderBy('Product.carat', 'ASC')
                 }
 
                 if (Clarity && Clarity.length) {
-                    qurey.andWhere('Product.clarity IN (:...clarity)', { clarity: JSON.parse(Clarity) })
+                    qurey.where('Product.clarity IN (:...clarity)', { clarity: JSON.parse(Clarity) })
                 }
 
                 if (Cuts && Cuts.length) {
-                    qurey.andWhere('Product.cut IN (:...cut)', { cut: JSON.parse(Cuts) })
+                    qurey.where('Product.cut IN (:...cut)', { cut: JSON.parse(Cuts) })
                 }
 
                 if (Color && Color.length) {
-                    qurey.andWhere('Product.colour IN (:...colour)', { colour: JSON.parse(Color) })
+                    qurey.where('Product.colour IN (:...colour)', { colour: JSON.parse(Color) })
                 }
 
                 if (search) {
