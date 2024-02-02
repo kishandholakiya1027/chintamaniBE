@@ -10,9 +10,9 @@ const database = process.env.DATABASE
 
 export const databaseConfig: PostgresConnectionOptions = {
   type: "postgres",
-  host: "db.bxgxlvwgtvjjjbzpaxhj.supabase.co",
-  port: 6543,
-  username: "postgres",
+  host: "aws-0-us-west-1.pooler.supabase.com",
+  port: 5432,
+  username: "postgres.bxgxlvwgtvjjjbzpaxhj",
   password: "Yash@799010",
   database: "postgres",
   synchronize: true,

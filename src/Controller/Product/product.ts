@@ -268,8 +268,6 @@ export class ProductController {
 
                 const [product, total] = await qurey.getManyAndCount()
 
-                console.log(product,"Product")
-
                 if (!product || product.length === 0) {
                     return RoutesHandler.sendError(res, req, 'Product Not Found', ResponseCodes.success);
                 }

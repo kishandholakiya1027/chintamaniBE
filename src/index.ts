@@ -11,7 +11,7 @@ import { CreateAdmin } from './utils/Admin';
 dotenv.config();
 
 const app = express();
-const port = 8080 || 4001;
+const port = 3005 || 4001;
 
 app.use(cors());
 app.use('/upload', express.static(path.join(__dirname, 'upload')))
