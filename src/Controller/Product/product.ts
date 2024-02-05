@@ -290,7 +290,7 @@ export class ProductController {
 
                 let image
 
-                if (req.file) {
+                if (image) {
                     image = await fileService.uploadFileInS3("product", [req.file.path])
                 }
 
