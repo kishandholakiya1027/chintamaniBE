@@ -166,20 +166,20 @@ export class Product {
     })
     status: ProductStatus;
 
-    @Column({ type: 'jsonb', nullable: true })
+    @Column({ type: 'jsonb'})
     diamond_size: {
         size: string;
         size_desc: string;
         sizeimages: string;
     };
 
-    @Column({ type: 'jsonb', nullable: true })
+    @Column({ type: 'jsonb'})
     diamond_color: {
         color_desc: string;
         colorimage: string;
     };
 
-    @Column({ type: 'jsonb', nullable: true })
+    @Column({ type: 'jsonb'})
     diamond_clarity: {
         clarity_desc: string;
         clarityimage: string;
