@@ -290,12 +290,12 @@ export class ProductController {
 
                 let image
 
-                if (req.file) {
-                    image = await fileService.uploadFileInS3("product", [req.file.path])
-                }
+                // if (req.file) {
+                //     image = await fileService.uploadFileInS3("product", [req.file.path])
+                // }
 
                 if (image) {
-                    return RoutesHandler.sendSuccess(res, req, { image: image[0].fileName }, "Images SuccessFully Created")
+                    return RoutesHandler.sendSuccess(res, req, { image: req.file.path }, "Images SuccessFully Created")
                 } else {
                     return RoutesHandler.sendError(res, req, 'Images Not Ganreted', ResponseCodes.inputError);
                 }
