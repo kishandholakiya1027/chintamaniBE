@@ -26,8 +26,8 @@ export const Update_Order_Payment = (req: any, res: Response, next): Promise<any
             }
 
             const instance = new Razorpay({
-                key_id: 'rzp_test_tpvb7kbNUGsSqT',
-                key_secret: 'biMD4UCPFuJDAFsF03eSH5te',
+                key_id: process.env.RAZORPAY_KEY_ID,
+                key_secret: process.env.RAZORPAY_KEY_SECRET,
             });
 
             const options = {
