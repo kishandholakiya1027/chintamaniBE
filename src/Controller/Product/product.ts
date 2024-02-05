@@ -288,14 +288,14 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, "Images Filed Required", ResponseCodes.inputError);
                 }
 
-                // let image
-
-                // if (req.file) {
-                //     image = await fileService.uploadFileInS3("product", [req.file.path])
-                // }
+                let image
 
                 if (req.file) {
-                    return RoutesHandler.sendSuccess(res, req, { image: `/uploads/${req.file.filename}` }, "Images SuccessFully Created")
+                    image = await fileService.uploadFileInS3("product", [req.file.path])
+                }
+
+                if (req.file) {
+                    return RoutesHandler.sendSuccess(res, req, { image: image[0].fileName }, "Images SuccessFully Created")
                 } else {
                     return RoutesHandler.sendError(res, req, 'Images Not Ganreted', ResponseCodes.inputError);
                 }
