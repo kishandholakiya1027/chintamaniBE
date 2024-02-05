@@ -45,7 +45,7 @@ export class FileService {
             try {
                 await b2.authorize();
                 const data = await b2.getUploadUrl({
-                    bucketId: '3d60d7fcca58092b88d60a16'
+                    bucketId: process.env.BLACKBLAZE_BUCKETID
                 })
 
                 const readDataData = await this.streamToBuffer(fs.createReadStream(file));
