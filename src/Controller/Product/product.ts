@@ -295,7 +295,7 @@ export class ProductController {
                 // }
 
                 if (req.file) {
-                    return RoutesHandler.sendSuccess(res, req, { image: req.file.path }, "Images SuccessFully Created")
+                    return RoutesHandler.sendSuccess(res, req, { image: `/uploads/${req.file.filename}` }, "Images SuccessFully Created")
                 } else {
                     return RoutesHandler.sendError(res, req, 'Images Not Ganreted', ResponseCodes.inputError);
                 }
