@@ -2,8 +2,8 @@ const B2 = require('backblaze-b2');
 import { Readable } from 'stream';
 const fs = require('fs');
 
-let applicationKeyId: string | undefined = process.env.B2_APPLICATION_KEY_ID
-let applicationKey: string | undefined =  process.env.B2_APPLICATION_KEY
+let applicationKeyId: string | undefined = process.env.B2_APPLICATION_KEY_ID || 'd07ca89b86a6'
+let applicationKey: string | undefined =  process.env.B2_APPLICATION_KEY || '0057c3703feb6097b2a6ca1583e4a38223a6c8427d'
 
 const b2 = new B2({
     applicationKeyId: applicationKeyId,
