@@ -59,7 +59,7 @@ export class ProductController {
                 if (req.files.productimage) {
                     const productimagePath = req.files.productimage.map((item: any) => item.filename)
                     // let productimageUrl = await fileService.uploadFileInS3("product", productimagePath)
-                    productimage = productimagePath.map((item: any) => `/upload/${item}`)
+                    productimage = productimagePath.map((item: any) => `${process.env.IMAGEBASEURL}/upload/${item}`)
                 }
 
                 // if (req.files.productvideo) {
@@ -128,25 +128,25 @@ export class ProductController {
                         star_length: star_length,
                         lower: lower,
                         productimage: productimage,
-                        productvideo: req.files.productvideo ? `/upload/${req.files.productvideo[0]?.fileName}` : null,
-                        diamond_certificate: req.files.diamond_certificate ? `/upload/${req.files.diamond_certificate[0]?.filename}` : null,
+                        productvideo: req.files.productvideo ? `${process.env.IMAGEBASEURL}/upload/${req.files.productvideo[0]?.fileName}` : null,
+                        diamond_certificate: req.files.diamond_certificate ? `${process.env.IMAGEBASEURL}/upload/${req.files.diamond_certificate[0]?.filename}` : null,
                         customized: customized,
                         diamond_size: {
                             size: size,
                             size_desc: size_desc,
-                            sizeimages: req.files.sizeimages ? `/upload/${req.files.sizeimages[0]?.fileName}` : null
+                            sizeimages: req.files.sizeimages ? `${process.env.IMAGEBASEURL}/upload/${req.files.sizeimages[0]?.fileName}` : null
                         },
                         diamond_color: {
                             color_desc: color_desc,
-                            colorimage: req.files.colorimage ? `/upload/${req.files.colorimage[0]?.fileName}` : null,
+                            colorimage: req.files.colorimage ? `${process.env.IMAGEBASEURL}/upload/${req.files.colorimage[0]?.fileName}` : null,
                         },
                         diamond_clarity: {
                             clarity_desc: clarity_desc,
-                            clarityimage: req.files.clarityimage ? `/upload/${req.files.clarityimage[0]?.fileName}` : null,
+                            clarityimage: req.files.clarityimage ? `${process.env.IMAGEBASEURL}/upload/${req.files.clarityimage[0]?.fileName}` : null,
                         },
                         diamond_cut: {
                             cut_desc: cut_desc,
-                            cutimage: req.files.cutimage ? `/upload/${req.files.cutimage[0]?.fileName}` : null,
+                            cutimage: req.files.cutimage ? `${process.env.IMAGEBASEURL}/upload/${req.files.cutimage[0]?.fileName}` : null,
                         },
                         categoryid: categoryid
                     })
@@ -296,7 +296,7 @@ export class ProductController {
                 // }
 
                 if (req.file) {
-                    return RoutesHandler.sendSuccess(res, req, { image: `/upload/${req.file.filename}` }, "Images SuccessFully Created")
+                    return RoutesHandler.sendSuccess(res, req, { image: `${process.env.IMAGEBASEURL}/upload/${req.file.filename}` }, "Images SuccessFully Created")
                 } else {
                     return RoutesHandler.sendError(res, req, 'Images Not Ganreted', ResponseCodes.inputError);
                 }

@@ -36,7 +36,7 @@ export class SubCategoryController {
           name,
           categoryid: categoryid,
           description,
-          image: req.file ? `/upload/${req.file.filename}` : null,
+          image: req.file ? `${process.env.IMAGEBASEURL}/upload/${req.file.filename}` : null,
         };
 
         const newSubCategory = subCategoryRepo.create(subcategory);

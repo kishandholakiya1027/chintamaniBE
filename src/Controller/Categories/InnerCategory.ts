@@ -37,7 +37,7 @@ export class InnerCategoryController {
           name,
           subcategoryid: subcategoryid,
           description,
-          image: req.file ? `/upload/${req.file.filename}`  : null,
+          image: req.file ? `${process.env.IMAGEBASEURL}/upload/${req.file.filename}`  : null,
         };
 
         const newSubCategory = InnerCategoryRepo.create(subcategory);

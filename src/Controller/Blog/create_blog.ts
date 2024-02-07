@@ -25,7 +25,7 @@ export const Create_Blog = (req: any, res: Response, next): Promise<any> => {
       if (existingBlog) {
         return RoutesHandler.sendError(res, req, 'Blog Name in alredy Exis', ResponseCodes.general);
       }
-      
+
       // let image
       // if (req.file) {
       //   const blogimagesPath = [req.file].map((item: any) => item.path.replace(/\\/g, "/"))
@@ -37,7 +37,7 @@ export const Create_Blog = (req: any, res: Response, next): Promise<any> => {
         author: author,
         description: description,
         heading: heading,
-        image: req.file ? `/upload/${req.file.filename}` : null
+        image: req.file ? `${process.env.IMAGEBASEURL}/upload/${req.file.filename}` : null
       })
 
       const NewBlog = await BlogRepo.save(qurey);

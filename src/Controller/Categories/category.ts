@@ -44,7 +44,7 @@ export class CategoryController {
           const CategoryData = await CategoryRepo.create({
             name: name,
             description: description,
-            image: req.file ? `/upload/${req.file.filename}` : null
+            image: req.file ? `${process.env.IMAGEBASEURL}/upload/${req.file.filename}` : null
           });
 
           CategoryRepo.save(CategoryData)
