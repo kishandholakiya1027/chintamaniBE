@@ -14,7 +14,7 @@ const app = express();
 const port = process.env.PORT || 8081;
 
 app.use(cors());
-app.use('/upload', express.static(path.join(__dirname, 'upload')))
+app.use('/upload', express.static('uploads'))
 app.use(bodyparser.urlencoded({ extended: true }))
 app.use(bodyparser.json())
 
