@@ -26,18 +26,19 @@ export const Create_Banner = (req: any, res: Response, next): Promise<any> => {
       if (existingBanner) {
         return RoutesHandler.sendError(res, req, 'Banner already in Exis', ResponseCodes.general);
       }
-      let image
+      
+      // let image
 
-      if (req.file) {
-        const BannerimagesPath = [req.file].map((item: any) => item.path.replace(/\\/g, "/"))
-        image = await fileService.uploadFileInS3("Banner", BannerimagesPath)
-      }
+      // if (req.file) {
+      //   const BannerimagesPath = [req.file].map((item: any) => item.path.replace(/\\/g, "/"))
+        // image = await fileService.uploadFileInS3("Banner", BannerimagesPath)
+      // }
 
       const qurey = await BannerRepo.create({
         title: title,
         description: description,
         redirectUrl: redirectUrl,
-        image: image ? image[0].fileName : null
+        image: req.file ? `/upload/${req.file.filename}` : null
       })
 
       const NewBanner = await BannerRepo.save(qurey);

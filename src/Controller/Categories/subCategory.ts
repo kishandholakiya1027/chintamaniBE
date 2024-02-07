@@ -25,18 +25,18 @@ export class SubCategoryController {
         }
         const subCategoryRepo = getRepository(SubCategory);
 
-        let subcategoryimage
+        // let subcategoryimage
 
-        if (req.file) {
-          const subcategoryimagesPath = [req.file].map((item: any) => item.path)
-          subcategoryimage = await fileService.uploadFileInS3("subcategory", subcategoryimagesPath)
-        }
+        // if (req.file) {
+        //   const subcategoryimagesPath = [req.file].map((item: any) => item.path)
+        //   subcategoryimage = await fileService.uploadFileInS3("subcategory", subcategoryimagesPath)
+        // }
 
         let subcategory = {
           name,
           categoryid: categoryid,
           description,
-          image: subcategoryimage ? subcategoryimage[0]?.fileName : null,
+          image: req.file ? `/upload/${req.file.filename}` : null,
         };
 
         const newSubCategory = subCategoryRepo.create(subcategory);

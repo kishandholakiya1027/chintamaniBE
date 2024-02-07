@@ -16,7 +16,7 @@ export class ProductController {
         return new Promise(async (resolve, reject) => {
             try {
 
-                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, customized, srno,location,stock,stone,rap,rap_disccount,per_ct,flourescence_Color,table_inclusion,side_inclusion,feather_inclusion,tinge,eyeclean,girdle,girdle_con,girdle_per,culet,report,report_date,laser_inscription,lab,star_length,lower } = req.body
+                const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, customized, srno, location, stock, stone, rap, rap_disccount, per_ct, flourescence_Color, table_inclusion, side_inclusion, feather_inclusion, tinge, eyeclean, girdle, girdle_con, girdle_per, culet, report, report_date, laser_inscription, lab, star_length, lower } = req.body
 
                 if (!maintitle || !title || !price || !categoryid) {
                     return RoutesHandler.sendError(res, req, "All Filed Required", ResponseCodes.inputError);
@@ -31,41 +31,41 @@ export class ProductController {
                 let productvideo
                 let productimage = []
 
-                if (req.files.sizeimages) {
-                    const sizeimagesPath = req.files.sizeimages.map((item: any) => item.path)
-                    sizeimages = await fileService.uploadFileInS3("size", sizeimagesPath)
-                }
+                // if (req.files.sizeimages) {
+                //     const sizeimagesPath = req.files.sizeimages.map((item: any) => item.path)
+                //     sizeimages = await fileService.uploadFileInS3("size", sizeimagesPath)
+                // }
 
-                if (req?.files?.diamond_certificate) {
-                    const diamond_certificateimagesPath = req.files.diamond_certificate.map((item: any) => item.path)
-                    diamond_certificate = await fileService.uploadFileInS3("diamond_certificate", diamond_certificateimagesPath)
-                }
+                // if (req?.files?.diamond_certificate) {
+                //     const diamond_certificateimagesPath = req.files.diamond_certificate.map((item: any) => item.path)
+                //     diamond_certificate = await fileService.uploadFileInS3("diamond_certificate", diamond_certificateimagesPath)
+                // }
 
-                if (req.files.colorimage) {
-                    const colorimagePath = req.files.colorimage.map((item: any) => item.path)
-                    colorimage = await fileService.uploadFileInS3("color", colorimagePath)
-                }
+                // if (req.files.colorimage) {
+                //     const colorimagePath = req.files.colorimage.map((item: any) => item.path)
+                //     colorimage = await fileService.uploadFileInS3("color", colorimagePath)
+                // }
 
-                if (req.files.clarityimage) {
-                    const clarityimagePath = req.files.clarityimage.map((item: any) => item.path)
-                    clarityimage = await fileService.uploadFileInS3("clarity", clarityimagePath)
-                }
+                // if (req.files.clarityimage) {
+                //     const clarityimagePath = req.files.clarityimage.map((item: any) => item.path)
+                //     clarityimage = await fileService.uploadFileInS3("clarity", clarityimagePath)
+                // }
 
-                if (req.files.cutimage) {
-                    const cutimagePath = req.files.cutimage.map((item: any) => item.path)
-                    cutimage = await fileService.uploadFileInS3("cut", cutimagePath)
-                }
+                // if (req.files.cutimage) {
+                //     const cutimagePath = req.files.cutimage.map((item: any) => item.path)
+                //     cutimage = await fileService.uploadFileInS3("cut", cutimagePath)
+                // }
 
                 if (req.files.productimage) {
-                    const productimagePath = req.files.productimage.map((item: any) => item.path)
-                    let productimageUrl = await fileService.uploadFileInS3("product", productimagePath)
-                    productimage = productimageUrl.map((item: any) => item.fileName)
+                    const productimagePath = req.files.productimage.map((item: any) => item.filename)
+                    // let productimageUrl = await fileService.uploadFileInS3("product", productimagePath)
+                    productimage = productimagePath.map((item: any) => `/upload/${item}`)
                 }
 
-                if (req.files.productvideo) {
-                    const productvideoPath = req.files.productvideo.map((item: any) => item.path)
-                    productvideo = await fileService.uploadFileInS3("productvideo", productvideoPath)
-                }
+                // if (req.files.productvideo) {
+                //     const productvideoPath = req.files.productvideo.map((item: any) => item.path)
+                //     productvideo = await fileService.uploadFileInS3("productvideo", productvideoPath)
+                // }
 
                 const FindProduct = await ProductRepo.createQueryBuilder('Product')
                     .where('Product.maintitle = :maintitle ', { maintitle })
@@ -86,13 +86,13 @@ export class ProductController {
                         srno: srno,
                         location: location,
                         stock: stock,
-                        stone: stone,                         
+                        stone: stone,
                         maintitle: maintitle,
                         title: title,
                         price: price,
                         rap: rap,
                         rap_disccount: rap_disccount,
-                        per_ct : per_ct,
+                        per_ct: per_ct,
                         disccount_price: disccount_price ? disccount_price : null,
                         disccount_percentage: disccount_percentage ? disccount_percentage : null,
                         shape: shape,
@@ -103,19 +103,19 @@ export class ProductController {
                         polish: polish,
                         symmetry: symmetry,
                         flourescence: flourescence,
-                        flourescence_Color : flourescence_Color,
+                        flourescence_Color: flourescence_Color,
                         measurements: measurements,
                         cert_number: cert_number,
                         table: table,
                         table_inclusion: table_inclusion,
                         side_inclusion: side_inclusion,
-                        feather_inclusion : feather_inclusion,
+                        feather_inclusion: feather_inclusion,
                         tinge: tinge,
                         eyeclean: eyeclean,
-                        girdle : girdle,
-                        girdle_con : girdle_con,
+                        girdle: girdle,
+                        girdle_con: girdle_con,
                         girdle_per: girdle_per,
-                        culet : culet, 
+                        culet: culet,
                         crown_height: crown_height,
                         pavilian_depth: pavilian_depth,
                         depth: depth,
@@ -123,30 +123,30 @@ export class ProductController {
                         pavilian_angle: pavilian_angle,
                         report: report,
                         report_date: report_date,
-                        laser_inscription : laser_inscription,
+                        laser_inscription: laser_inscription,
                         lab: lab,
-                        star_length : star_length,
+                        star_length: star_length,
                         lower: lower,
                         productimage: productimage,
-                        productvideo: productvideo ?  productvideo[0]?.fileName : null,
-                        diamond_certificate: diamond_certificate ? diamond_certificate[0]?.fileName : null,
+                        productvideo: req.files.productvideo ? `/upload/${req.files.productvideo[0]?.fileName}` : null,
+                        diamond_certificate: req.files.diamond_certificate ? `/upload/${req.files.diamond_certificate[0]?.filename}` : null,
                         customized: customized,
                         diamond_size: {
                             size: size,
                             size_desc: size_desc,
-                            sizeimages: sizeimages ? sizeimages[0]?.fileName : null
+                            sizeimages: req.files.sizeimages ? `/upload/${req.files.sizeimages[0]?.fileName}` : null
                         },
                         diamond_color: {
                             color_desc: color_desc,
-                            colorimage: colorimage ? colorimage[0]?.fileName : null,
+                            colorimage: req.files.colorimage ? `/upload/${req.files.colorimage[0]?.fileName}` : null,
                         },
                         diamond_clarity: {
                             clarity_desc: clarity_desc,
-                            clarityimage: clarityimage ? clarityimage[0]?.fileName : null,
+                            clarityimage: req.files.clarityimage ? `/upload/${req.files.clarityimage[0]?.fileName}` : null,
                         },
                         diamond_cut: {
                             cut_desc: cut_desc,
-                            cutimage: cutimage ? cutimage[0]?.fileName : null,
+                            cutimage: req.files.cutimage ? `/upload/${req.files.cutimage[0]?.fileName}` : null,
                         },
                         categoryid: categoryid
                     })
@@ -288,14 +288,15 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, "Images Filed Required", ResponseCodes.inputError);
                 }
 
-                let image
+                // let image
+                // if (req.file) {
+                //     console.log(req.file,"req.file")
+                //     return
+                //     // image = await fileService.uploadFileInS3("product", [req.file.path])
+                // }
 
                 if (req.file) {
-                    image = await fileService.uploadFileInS3("product", [req.file.path])
-                }
-
-                if (image) {
-                    return RoutesHandler.sendSuccess(res, req, { image: image[0]?.fileName }, "Images SuccessFully Created")
+                    return RoutesHandler.sendSuccess(res, req, { image: `/upload/${req.file.filename}` }, "Images SuccessFully Created")
                 } else {
                     return RoutesHandler.sendError(res, req, 'Images Not Ganreted', ResponseCodes.inputError);
                 }
@@ -317,7 +318,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate, customized, srno,location,stock,stone,rap,rap_disccount,per_ct,flourescence_Color,table_inclusion,side_inclusion,feather_inclusion,tinge,eyeclean,girdle,girdle_con,girdle_per,culet,report,report_date,laser_inscription,lab,star_length,lower, productvideo } = req.body
+                const { productId, maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, productimage, status, sizeimages, colorimage, clarityimage, cutimage, diamond_certificate, customized, srno, location, stock, stone, rap, rap_disccount, per_ct, flourescence_Color, table_inclusion, side_inclusion, feather_inclusion, tinge, eyeclean, girdle, girdle_con, girdle_per, culet, report, report_date, laser_inscription, lab, star_length, lower, productvideo } = req.body
 
                 const productRepo = getRepository(Product);
 

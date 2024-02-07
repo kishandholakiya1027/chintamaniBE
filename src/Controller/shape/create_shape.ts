@@ -25,17 +25,17 @@ export const Cteate_Shape = (req: any, res: Response, next): Promise<any> => {
                 return RoutesHandler.sendError(res, req, ' Shape already in Exis', ResponseCodes.general);
             }
 
-            let shapeimage
+            // let shapeimage
 
-            if (req.file) {
-                const shapeimagesPath = [req.file].map((item: any) => item.path)
-                shapeimage = await fileService.uploadFileInS3("shape", shapeimagesPath)
-            }
+            // if (req.file) {
+            //     const shapeimagesPath = [req.file].map((item: any) => item.path)
+            //     shapeimage = await fileService.uploadFileInS3("shape", shapeimagesPath)
+            // }
 
             const qurey = await ShapeRepo.create({
                 name: name,
                 description: description,
-                image: shapeimage ? shapeimage[0]?.fileName : null
+                image: req.file ? `/upload/${req.file.filename}` : null
             })
 
             const NewShape = await ShapeRepo.save(qurey);

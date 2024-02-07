@@ -34,17 +34,17 @@ export class CategoryController {
 
         if (!category) {
 
-          let categoryimage
+          // let categoryimage
 
-          if (req.file) {
-            const categoryimagesPath = [req.file].map((item: any) => item.path)
-            categoryimage = await fileService.uploadFileInS3("categoryimage", categoryimagesPath)
-          }
+          // if (req.file) {
+            // const categoryimagesPath = [req.file].map((item: any) => item.path)
+            // categoryimage = await fileService.uploadFileInS3("categoryimage", categoryimagesPath)
+          // }
 
           const CategoryData = await CategoryRepo.create({
             name: name,
             description: description,
-            image: categoryimage ? categoryimage[0]?.fileName : null
+            image: req.file ? `/upload/${req.file.filename}` : null
           });
 
           CategoryRepo.save(CategoryData)

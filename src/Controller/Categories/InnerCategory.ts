@@ -26,18 +26,18 @@ export class InnerCategoryController {
         }
         const InnerCategoryRepo = getRepository(InnerCategory);
 
-        let InnerCategporyimage
+        // let InnerCategporyimage
 
-        if (req.file) {
-          const innercategoryimagesPath = [req.file].map((item: any) => item.path)
-          InnerCategporyimage = await fileService.uploadFileInS3("InnerCategporyimage", innercategoryimagesPath)
-        }
+        // if (req.file) {
+        //   const innercategoryimagesPath = [req.file].map((item: any) => item.path)
+        //   InnerCategporyimage = await fileService.uploadFileInS3("InnerCategporyimage", innercategoryimagesPath)
+        // }
 
         let subcategory = {
           name,
           subcategoryid: subcategoryid,
           description,
-          image: InnerCategporyimage ? InnerCategporyimage[0]?.fileName : null,
+          image: req.file ? `/upload/${req.file.filename}`  : null,
         };
 
         const newSubCategory = InnerCategoryRepo.create(subcategory);
