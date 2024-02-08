@@ -18,7 +18,7 @@ export class ProductController {
 
                 const { maintitle, title, price, disccount_price, shape, carat, colour, clarity, cut, polish, symmetry, flourescence, measurements, cert_number, table, crown_height, pavilian_depth, depth, crown_angle, pavilian_angle, size, size_desc, color_desc, clarity_desc, cut_desc, subcategoryid, innercategoryid, categoryid, customized, srno, location, stock, stone, rap, rap_disccount, per_ct, flourescence_Color, table_inclusion, side_inclusion, feather_inclusion, tinge, eyeclean, girdle, girdle_con, girdle_per, culet, report, report_date, laser_inscription, lab, star_length, lower } = req.body
 
-                if (!maintitle || !title || !price || !categoryid) {
+                if (!title || !price || !categoryid) {
                     return RoutesHandler.sendError(res, req, "All Filed Required", ResponseCodes.inputError);
                 }
 
@@ -382,7 +382,7 @@ export class ProductController {
                 existingProduct.productimage = productimage || existingProduct.productimage;
                 existingProduct.productvideo = productvideo || existingProduct.productvideo;
                 existingProduct.diamond_certificate = diamond_certificate || existingProduct.diamond_certificate;
-                existingProduct.customized = customized || existingProduct.customized;
+                existingProduct.customized = Boolean(customized) || existingProduct.customized;
                 existingProduct.status = Number(status) || existingProduct.status;
                 existingProduct.diamond_size.size = size || existingProduct.diamond_size.size;
                 existingProduct.diamond_size.size_desc = size_desc || existingProduct.diamond_size.size_desc;
