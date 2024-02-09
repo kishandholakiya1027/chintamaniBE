@@ -189,7 +189,7 @@ export class ProductController {
                     return RoutesHandler.sendError(res, req, errors.array(), ResponseCodes.inputError);
                 }
 
-                const { subcategoryid, innnercategoryid, categoryid, minPrice, maxPrice, sort, mincarat, maxcarat, Clarity, Cuts, Color, shape, search } = req.query
+                const { subcategoryid, innercategoryid, categoryid, minPrice, maxPrice, sort, mincarat, maxcarat, Clarity, Cuts, Color, shape, search } = req.query
 
                 const ProductRepo = getRepository(Product);
 
@@ -213,8 +213,8 @@ export class ProductController {
                 if (subcategoryid) {
                     qurey.where('Product.subcategoryid = :subcategoryid ', { subcategoryid: subcategoryid })
                 }
-                if (innnercategoryid) {
-                    qurey.where('Product.innercategoryid = :innercategoryid ', { innercategoryid: innnercategoryid })
+                if (innercategoryid) {
+                    qurey.where('Product.innercategoryid = :innercategoryid ', { innercategoryid: innercategoryid })
 
                 }
                 if (minPrice && maxPrice) {
