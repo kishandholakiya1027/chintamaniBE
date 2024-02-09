@@ -214,7 +214,7 @@ export class ProductController {
                     qurey.where('Product.subcategoryid = :subcategoryid ', { subcategoryid: subcategoryid })
                 }
                 if (innnercategoryid) {
-                    qurey.where('Product.innnercategoryid = :innnercategoryid ', { innercategoryid: innnercategoryid })
+                    qurey.where('Product.innercategoryid = :innercategoryid ', { innercategoryid: innnercategoryid })
 
                 }
                 if (minPrice && maxPrice) {

@@ -26,7 +26,7 @@ export const Create_Banner = (req: any, res: Response, next): Promise<any> => {
       if (existingBanner) {
         return RoutesHandler.sendError(res, req, 'Banner already in Exis', ResponseCodes.general);
       }
-      
+
       // let image
 
       // if (req.file) {
@@ -38,7 +38,7 @@ export const Create_Banner = (req: any, res: Response, next): Promise<any> => {
         title: title,
         description: description,
         redirectUrl: redirectUrl,
-        image: req.file ? `/upload/${req.file.filename}` : null
+        image: req.file ? `${process.env.IMAGEBASEURL}/upload/${req.file.filename}` : null
       })
 
       const NewBanner = await BannerRepo.save(qurey);
