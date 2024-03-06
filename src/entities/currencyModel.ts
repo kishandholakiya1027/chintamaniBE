@@ -2,22 +2,25 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { CurrencyPrice } from "./currencyPriceModel";
 
 export enum Status {
-  ACTIVE,
-  INACTIVE,
+  ACTIVE = 1,
+  INACTIVE = 0,
 }
 
 @Entity()
-export class Banner {
+export class Currencies {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
-  @Column({ nullable: true })
-  title: string;
+  @Column({ nullable: false })
+  name: string;
 
   @Column({ nullable: true })
   description: string;
@@ -25,11 +28,16 @@ export class Banner {
   @Column({ nullable: true })
   image: string;
 
-  @Column({ nullable: true })
-  redirectUrl: string;
+  @Column({ default: Status.ACTIVE })
+  status: Status;
 
-  @Column({ default: Status.INACTIVE })
-  status: number;
+  @ManyToOne(() => CurrencyPrice, {
+    onDelete: "CASCADE",
+    onUpdate: "CASCADE",
+    nullable: true,
+  })
+  @JoinColumn({ name: "currencypriceid", referencedColumnName: "id" })
+  currencypriceid: CurrencyPrice;
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;

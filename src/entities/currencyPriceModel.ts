@@ -6,30 +6,16 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 
-export enum Status {
-  ACTIVE,
-  INACTIVE,
-}
-
 @Entity()
-export class Banner {
+export class CurrencyPrice {
   @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @Column({ nullable: true })
-  title: string;
+  code: string;
 
   @Column({ nullable: true })
-  description: string;
-
-  @Column({ nullable: true })
-  image: string;
-
-  @Column({ nullable: true })
-  redirectUrl: string;
-
-  @Column({ default: Status.INACTIVE })
-  status: number;
+  value: string;
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
