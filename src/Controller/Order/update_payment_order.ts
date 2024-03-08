@@ -47,7 +47,7 @@ export const Update_Order_Payment = (
       });
 
       const options = {
-        amount: +existingOrder.totalprice * 100,
+        amount: Number(+existingOrder.calculatedPrice * 100).toFixed(),
         currency: existingOrder.currency,
         receipt: "receipt_order_74394",
       };

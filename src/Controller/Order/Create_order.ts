@@ -121,6 +121,7 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
               Address: Address,
               deliveredAt: today,
               currency: currency,
+              calculatedPrice: calculatedPrice.toFixed(),
             })
           );
           await CartRepo.remove(existingCart);

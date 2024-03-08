@@ -47,6 +47,9 @@ export class Order {
   @Column({ nullable: true })
   totalprice: string;
 
+  @Column({ nullable: true })
+  calculatedPrice: string;
+
   @Column({ nullable: true, default: Order_Status.Ongoing })
   orderstatus: number;
 
