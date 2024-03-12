@@ -96,12 +96,12 @@ export const Cteate_Order = (req: any, res: Response, next): Promise<any> => {
             key_id: process.env.RAZORPAY_KEY_ID,
             key_secret: process.env.RAZORPAY_KEY_SECRET,
           });
-          console.log(cartTotal, "cartTotal");
           const options = {
-            amount: Number(calculatedPrice.toFixed() * 100),
+            amount: Number(calculatedPrice * 100).toFixed(),
             currency: currency,
             receipt: "receipt_order_74394",
           };
+
           const order = await instance.orders.create(options);
 
           let productids = existingCart.products_id.map((item) => item);
